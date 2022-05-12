@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortsVisualizer.UI", "SortsVisualizer.UI\SortsVisualizer.UI.csproj", "{D334F39A-F2A6-48FD-94A5-A3E52348652E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D334F39A-F2A6-48FD-94A5-A3E52348652E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D334F39A-F2A6-48FD-94A5-A3E52348652E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D334F39A-F2A6-48FD-94A5-A3E52348652E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D334F39A-F2A6-48FD-94A5-A3E52348652E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85935332-E04F-4CFD-B849-E4ADE6136250}
+	EndGlobalSection
+EndGlobal
