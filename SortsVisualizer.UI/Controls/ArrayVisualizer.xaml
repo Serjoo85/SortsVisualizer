@@ -6,6 +6,6 @@
              xmlns:local="clr-namespace:SortsVisualizer.UI.Controls"
              mc:Ignorable="d" 
              d:Height="500" d:Width="1000">
-    <StackPanel x:Name="ViewArray" Orientation="Horizontal" DataContext="{}">
+    <StackPanel x:Name="ViewArray" Orientation="Horizontal">
     </StackPanel>
 </UserControl>
