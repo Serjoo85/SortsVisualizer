@@ -12,5 +12,6 @@
     </Window.DataContext>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <ctrl:ArrayVisualizer DiagramSource="{Binding DiagramSource}"/>
+        <Button Command="{Binding StartSortingCommand}">PushMe</Button>
     </StackPanel>
 </Window>

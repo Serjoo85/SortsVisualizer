@@ -1,5 +1,5 @@
-﻿using MailSender.lib.Commands.Base;
-using System;
+﻿using System;
+using SortsVisualizer.lib.Commands.Base;
 
 namespace MailSender.lib.Commands
 {
