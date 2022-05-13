@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using MailSender.lib.Commands;
+using SortsVisualizer.lib.Services;
 using SortsVisualizer.UI.Data;
 
 namespace SortsVisualizer.UI.ViewModels;
@@ -13,7 +13,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 {
     #region Base functionality INotifyPropertyChanged
 
-    public event PropertyChangedEventHandler PropertyChanged = null!;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!)
     {
@@ -32,48 +32,66 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     public MainWindowViewModel()
     {
-        DiagramSource = CreateRectangleArray(TestData.array);
+        DiagramSource = TestData.array;
+        _bubbleSort = new BubbleSorting();
+
+        StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
     }
 
-    private Rectangle[] _diagramSource = null!;
-    public Rectangle[] DiagramSource
+    #region Commands
+
+    public ICommand StartSortingCommand { get; }
+
+    private bool CanStartSortingCommandExecute(object o) => true;
+
+    private async void OnStartSortingCommandExecuted(object o)
+    {
+        await BubbleSort();
+    }
+
+    #endregion
+
+    private int[] _diagramSource;
+    private readonly BubbleSorting _bubbleSort;
+    public int[] DiagramSource
     {
         get => _diagramSource;
         set
         {
+            var result = _diagramSource?.Equals(value);
             _diagramSource = value;
             OnPropertyChanged(nameof(DiagramSource));
         }
     }
 
-
-    public Rectangle[] CreateRectangleArray(int[] array)
+    public async Task BubbleSort()
     {
-        var rectangles = new List<Rectangle>();
-        var min = array.Min();
-        var max = array.Max();
-        var width = 1000 / array.Length;
-        var heightFactor = 500 / max;
-
-        foreach (var value in array)
+        await Task.Run(() =>
         {
-            rectangles.Add(
-                CreateRectangle(value * heightFactor, width));
-        }
-
-        return rectangles.ToArray();
+            int num = DiagramSource.Length;
+            for (int i = 0; i < num - 1; i++)
+            {
+                for (int j = 0; j < num - i - 1; j++)
+                {
+                    var j1 = j;
+                    if (DiagramSource[j1] > DiagramSource[j1 + 1])
+                    {
+                        (DiagramSource[j1], DiagramSource[j1 + 1]) = (DiagramSource[j1 + 1], DiagramSource[j1]);
+                        DiagramSource = DeepCopy(DiagramSource);
+                        OnPropertyChanged("DiagramSource");
+                        Thread.Sleep(700);
+                    }
+                }
+            }
+        });
     }
 
-    private Rectangle CreateRectangle(int height, int width)
+    private int[] DeepCopy(int[] arr)
     {
-        var rectangle = new System.Windows.Shapes.Rectangle
-        {
-            Width = width,
-            Height = height,
-            Stroke = Brushes.Black,
-            VerticalAlignment = VerticalAlignment.Bottom,
-        };
+        var copyArr = new int[arr.Length];
 
-        return rectangle;
+        for (int i = 0; i < arr.Length; i++)
+            copyArr[i] = arr[i];
+        return copyArr;
     }
 }
