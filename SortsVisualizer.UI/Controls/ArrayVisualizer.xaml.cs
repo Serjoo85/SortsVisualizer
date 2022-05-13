@@ -18,6 +18,7 @@ namespace SortsVisualizer.UI.Controls;
 public partial class ArrayVisualizer : UserControl, INotifyPropertyChanged
 {
     private static int _heightFactor;
+    private static int _width;
 
     public ArrayVisualizer()
     {
@@ -43,33 +44,48 @@ public partial class ArrayVisualizer : UserControl, INotifyPropertyChanged
 
     #endregion
 
-    private static void CreateDiagram(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static async void CreateDiagram(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var userControl = d as ArrayVisualizer;
         var viewArray = userControl!.ViewArray;
         var array = userControl!.DiagramSource;
-        if (viewArray.Children.Count > 0)
+
+        if (_heightFactor == 0 ||
+            _width == 0)
         {
-            Task.Run(() =>
+            var max = array.Max();
+            _width = (int)(viewArray.Width / array.Length);
+            _heightFactor = (int)(viewArray.Height / max);
+        }
+
+        if (viewArray.Children.Count > 0 && 
+            viewArray.Children.Count == array.Length)
+        {
+            await Task.Run(() =>
             {
                 for (int i = 0; i < array.Length; i++)
                 {
                     var i1 = i;
-                    viewArray.Dispatcher.Invoke(() => ((Rectangle)viewArray.Children[i1]).Height = array[i1] * _heightFactor);
+                    viewArray.Dispatcher.Invoke(() =>
+                    {
+                        var rec = (Rectangle)viewArray.Children[i1];
+                        rec.Fill = Math.Abs(rec.Height - array[i1] * _heightFactor) > 0.1 
+                            ? Brushes.Coral 
+                            : Brushes.White;
+                        rec.Height = array[i1] * _heightFactor;
+                        
+                    });
                 }
             });
             return;
         }
-        var max = array.Max();
-        int width = 1000 / array.Length;
-        _heightFactor = 500 / max;
 
-        Task.Run(() =>
+        await Task.Run(() =>
         {
             viewArray.Dispatcher.Invoke(() => viewArray.Children.Clear());
             foreach (var height in array)
             {
-                var rect = CreateRectangle(height * _heightFactor, width);
+                var rect = CreateRectangle(height * _heightFactor, _width);
                 viewArray.Dispatcher.Invoke(() => viewArray.Children.Add(rect));
                 Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
             }

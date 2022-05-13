@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SortsVisualizer.UI.Controls"
-             mc:Ignorable="d" 
-             d:Height="500" d:Width="1000">
-    <StackPanel x:Name="ViewArray" Orientation="Horizontal">
+             mc:Ignorable="d">
+    <StackPanel x:Name="ViewArray" Orientation="Horizontal" Height="500" Width="1000">
     </StackPanel>
 </UserControl>

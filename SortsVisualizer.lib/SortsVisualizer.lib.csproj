@@ -13,5 +13,8 @@
 		<Reference Include="PresentationFramework">
 			<HintPath>..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.4\PresentationFramework.dll</HintPath>
 		</Reference>
+		<Reference Include="PresentationFramework">
+			<HintPath>..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.4\WindowsBase.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 </Project>

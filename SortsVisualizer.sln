@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortsVisualizer.UI", "SortsVisualizer.UI\SortsVisualizer.UI.csproj", "{D334F39A-F2A6-48FD-94A5-A3E52348652E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SortsVisualizer.UI", "SortsVisualizer.UI\SortsVisualizer.UI.csproj", "{D334F39A-F2A6-48FD-94A5-A3E52348652E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortsVisualizer.lib", "SortsVisualizer.lib\SortsVisualizer.lib.csproj", "{54CDF2D0-2CD1-4770-97EA-AF2B12D9571E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SortsVisualizer.lib", "SortsVisualizer.lib\SortsVisualizer.lib.csproj", "{54CDF2D0-2CD1-4770-97EA-AF2B12D9571E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
