@@ -37,7 +37,7 @@
             <ComboBox Width="200" Margin="0,0,20,0"/>
             <Button Height="30"
                     Width="80"
-                    Content="Start"
+                    Content="StartAsync"
                     Command="{Binding StartSortingCommand}"
                     HorizontalAlignment="Right"/>
         </StackPanel>

@@ -5,7 +5,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using MailSender.lib.Commands;
+using SortsVisualizer.lib.Enums;
+using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
+using SortsVisualizer.lib.Services;
 using SortsVisualizer.UI.Data;
 
 namespace SortsVisualizer.UI.ViewModels;
@@ -23,12 +26,6 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     #endregion
 
-    public MainWindowViewModel()
-    {
-        DiagramSource = TestData.ObservableCollection;
-        StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
-    }
-
     #region Commands
 
     public ICommand StartSortingCommand { get; }
@@ -37,63 +34,24 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        await BubbleSortObservableCollectionAsync();
+        var sorter = _sorterService.GetSorter(SortType.Bubble);
+        await sorter.StartAsync(DiagramSource);
     }
 
     #endregion
 
+    #region Properties
+
     public ObservableCollection<DiagramItem> DiagramSource { get; set; }
+    private readonly ISorterService _sorterService;
 
-    public async Task BubbleSortObservableCollectionAsync()
+
+    #endregion
+
+    public MainWindowViewModel()
     {
-        int num = DiagramSource.Count;
-        for (int i = 0; i < num - 1; i++)
-        {
-            var hasSwap = false;
-            for (int j = 0; j < num - i - 1; j++)
-            {
-                // Текущий элемент.
-                var j1 = j;
-                // Закрашиваем текущий элемент с перестановкой.
-                if (DiagramSource[j1].Value > DiagramSource[j1 + 1].Value)
-                {
-                    hasSwap = true;
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (j1 > 0)
-                            ChangeColor(DiagramSource, j1 - 1, Colors.White);
-                        ChangeColor(DiagramSource, j1, Colors.Orange);
-                        (DiagramSource[j1], DiagramSource[j1 + 1]) = (DiagramSource[j1 + 1], DiagramSource[j1]);
-                    });
-                }
-                // Закрашиваем текущий элемент без перестановки.
-                else
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (j1 > 0)
-                            ChangeColor(DiagramSource, j1 - 1, Colors.White);
-                        ChangeColor(DiagramSource, j1, Colors.Orange);
-                    });
-
-                }
-                OnCollectionChanged(NotifyCollectionChangedAction.Replace);
-                await Task.Delay(100);
-            }
-
-            // Красим в белый последний закрашенный прямоугольник.
-            Application.Current.Dispatcher.Invoke(() =>
-                ChangeColor(DiagramSource, num - i - 2, Colors.White));
-            OnCollectionChanged(NotifyCollectionChangedAction.Replace);
-            // Проход без замены признак отсортированной последовательности.
-            if (hasSwap == false) return;
-        }
-
-        void ChangeColor(ObservableCollection<DiagramItem> collection, int index, Color color)
-        {
-            var newItem = collection[index];
-            newItem.Color = new SolidColorBrush(color);
-            collection[index] = newItem;
-        }
+        DiagramSource = TestData.ObservableCollection;
+        _sorterService = new SorterService(OnCollectionChanged);
+        StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
     }
 }
