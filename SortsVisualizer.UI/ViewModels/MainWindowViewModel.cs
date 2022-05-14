@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -83,7 +82,8 @@ public class MainWindowViewModel : INotifyCollectionChanged
             }
 
             // Красим в белый последний закрашенный прямоугольник.
-            Application.Current.Dispatcher.Invoke(() => ChangeColor(DiagramSource, num - i - 2, Colors.White));
+            Application.Current.Dispatcher.Invoke(() =>
+                ChangeColor(DiagramSource, num - i - 2, Colors.White));
             OnCollectionChanged(NotifyCollectionChangedAction.Replace);
             // Проход без замены признак отсортированной последовательности.
             if (hasSwap == false) return;
