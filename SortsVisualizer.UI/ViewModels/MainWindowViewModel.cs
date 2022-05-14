@@ -1,21 +1,15 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 using MailSender.lib.Commands;
-using SortsVisualizer.lib.Services;
 using SortsVisualizer.UI.Data;
 
 namespace SortsVisualizer.UI.ViewModels;
 
-public class MainWindowViewModel : INotifyPropertyChanged, INotifyCollectionChanged
+public class MainWindowViewModel : INotifyCollectionChanged
 {
     #region ICollectionChanged
 
@@ -27,29 +21,9 @@ public class MainWindowViewModel : INotifyPropertyChanged, INotifyCollectionChan
     }
 
     #endregion
-
-    #region INotifyPropertyChanged
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null!)
-    {
-        if (Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
-
-    #endregion
-
+    
     public MainWindowViewModel()
     {
-        DiagramSourceArray = TestData.Array;
         DiagramSourceObservableCollection = TestData.ObservableCollection;
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
     }
@@ -68,19 +42,6 @@ public class MainWindowViewModel : INotifyPropertyChanged, INotifyCollectionChan
     #endregion
 
     public ObservableCollection<int> DiagramSourceObservableCollection { get; set; }
-
-    private int[] _diagramSourceArray;
-  
-
-    public int[] DiagramSourceArray
-    {
-        get => _diagramSourceArray;
-        set
-        {
-            _diagramSourceArray = value;
-            OnPropertyChanged(nameof(DiagramSourceArray));
-        }
-    }
 
     public async Task BubbleSortObservableCollection()
     {
@@ -102,37 +63,4 @@ public class MainWindowViewModel : INotifyPropertyChanged, INotifyCollectionChan
             }
         });
     }
-
-    public async Task BubbleSortArray()
-    {
-        await Task.Run(() =>
-        {
-            int num = DiagramSourceArray.Length;
-            for (int i = 0; i < num - 1; i++)
-            {
-                for (int j = 0; j < num - i - 1; j++)
-                {
-                    var j1 = j;
-                    if (DiagramSourceArray[j1] > DiagramSourceArray[j1 + 1])
-                    {
-                        (DiagramSourceArray[j1], DiagramSourceArray[j1 + 1]) = (DiagramSourceArray[j1 + 1], DiagramSourceArray[j1]);
-                        DiagramSourceArray = DeepCopy(DiagramSourceArray);
-                        OnPropertyChanged(nameof(DiagramSourceArray));
-                        Thread.Sleep(500);
-                    }
-                }
-            }
-        });
-    }
-
-    private int[] DeepCopy(int[] arr)
-    {
-        var copyArr = new int[arr.Length];
-
-        for (int i = 0; i < arr.Length; i++)
-            copyArr[i] = arr[i];
-        return copyArr;
-    }
-
-
 }
