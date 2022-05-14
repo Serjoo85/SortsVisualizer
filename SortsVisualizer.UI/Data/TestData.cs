@@ -1,33 +1,44 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Windows.Media;
+using SortsVisualizer.lib.Models;
 
 namespace SortsVisualizer.UI.Data;
 
 public static class TestData
 {
-    private static readonly Random _rnd = new Random();
-    public static int[] Array => GetMixedArray(20);
-    public static ObservableCollection<int> ObservableCollection => GetObservableCollection();
-    private static int[] GetMixedArray(int length = 20)
+    private static readonly Random Rnd = new Random();
+    public static ObservableCollection<DiagramItem> ObservableCollection => GetCollection(20);
+
+    private const int HeightFactor = 25;
+    private const int Width = 50;
+
+    private static ObservableCollection<DiagramItem> GetCollection(int count)
     {
-        var array = Enumerable.Range(1, length).Select(n => n * 25).ToArray();
-        for (int i = 0; i < length - 4; i++)
-        {
-            var r = _rnd.Next(1, 4);
-            (array[i], array[r]) = (array[r], array[i]);
-        }
-        return array;
+        var collection = new ObservableCollection<DiagramItem>();
+        for (int i = 1; i < count + 1; i++)
+            collection.Add(new DiagramItem
+            {
+                Value = i,
+                Height = i * HeightFactor,
+                Width = Width,
+                Color = Brushes.White,
+            });
+
+        MixCollection(collection);
+
+        return collection;
     }
 
-    private static ObservableCollection<int> GetObservableCollection()
+    private static void MixCollection(ObservableCollection<DiagramItem> collection)
     {
-        var array = GetMixedArray();
-        var collection = new ObservableCollection<int>();
-        foreach (var number in array)
+        for (int i = 0; i < 5; i++)
         {
-            collection.Add(number);
+            for (int j = 0; j < 20 - 3; j++)
+            {
+                var r = Rnd.Next(1, 3);
+                (collection[j], collection[r]) = (collection[r], collection[j]);
+            }
         }
-        return collection;
     }
 }
