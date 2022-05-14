@@ -10,8 +10,27 @@
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ctrl:ArrayVisualizer DiagramSource="{Binding DiagramSource}"/>
-        <Button Command="{Binding StartSortingCommand}">PushMe</Button>
+    <StackPanel>
+        <ItemsControl ItemsSource="{Binding DiagramSourceObservableCollection}" HorizontalAlignment="Center">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Width="1000"
+                                Height="500" FlowDirection="LeftToRight"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Rectangle Height="{Binding Path=.}"
+                               Width="50"
+                               Stroke="Black"
+                               VerticalAlignment="Bottom"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Height="30" Command="{Binding StartSortingCommand}">Start</Button>
     </StackPanel>
 </Window>

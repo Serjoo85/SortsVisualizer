@@ -58,7 +58,7 @@ public partial class ArrayVisualizer : UserControl, INotifyPropertyChanged
             _heightFactor = (int)(viewArray.Height / max);
         }
 
-        if (viewArray.Children.Count > 0 && 
+        if (viewArray.Children.Count > 0 &&
             viewArray.Children.Count == array.Length)
         {
             await Task.Run(() =>
@@ -69,11 +69,11 @@ public partial class ArrayVisualizer : UserControl, INotifyPropertyChanged
                     viewArray.Dispatcher.Invoke(() =>
                     {
                         var rec = (Rectangle)viewArray.Children[i1];
-                        rec.Fill = Math.Abs(rec.Height - array[i1] * _heightFactor) > 0.1 
-                            ? Brushes.Coral 
+                        rec.Fill = Math.Abs(rec.Height - array[i1] * _heightFactor) > 0.1
+                            ? Brushes.Coral
                             : Brushes.White;
                         rec.Height = array[i1] * _heightFactor;
-                        
+
                     });
                 }
             });
