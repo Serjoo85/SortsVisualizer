@@ -53,48 +53,50 @@ public class MainWindowViewModel : INotifyCollectionChanged
             for (int i = 0; i < num - 1; i++)
             {
                 var hasSwap = false;
-                for (int j = 0; j < num - 1; j++)
+                for (int j = 0; j < num - i - 1; j++)
                 {
+                    // Текущий элемент.
                     var j1 = j;
+                    // Закрашиваем текущий элемент с перестановкой.
                     if (DiagramSource[j1].Value > DiagramSource[j1 + 1].Value)
                     {
                         hasSwap = true;
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             if (j1 > 0)
-                                DiagramSource[j1 - 1] = ChangeColor(DiagramSource[j1 - 1], Colors.White);
-                            DiagramSource[j1] = ChangeColor(DiagramSource[j1], Colors.Orange);
+                                ChangeColor(DiagramSource, j1 - 1, Colors.White);
+                            ChangeColor(DiagramSource, j1, Colors.Orange);
                             (DiagramSource[j1], DiagramSource[j1 + 1]) = (DiagramSource[j1 + 1], DiagramSource[j1]);
                         });
-                        OnCollectionChanged(NotifyCollectionChangedAction.Replace);
                     }
+                    // Закрашиваем текущий элемент без перестановки.
                     else
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             if (j1 > 0)
-                                DiagramSource[j1 - 1] = ChangeColor(DiagramSource[j1 - 1], Colors.White);
-                            DiagramSource[j1] = ChangeColor(DiagramSource[j1], Colors.Orange);
+                                ChangeColor(DiagramSource, j1 - 1, Colors.White);
+                            ChangeColor(DiagramSource, j1, Colors.Orange);
                         });
-                        OnCollectionChanged(NotifyCollectionChangedAction.Replace);
+
                     }
-                    Thread.Sleep(50);
+                    OnCollectionChanged(NotifyCollectionChangedAction.Replace);
+                    Thread.Sleep(100);
                 }
 
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    DiagramSource[num - 1] = ChangeColor(DiagramSource[num - 1], Colors.White);
-                    DiagramSource[num - 2] = ChangeColor(DiagramSource[num - 2], Colors.White);
-                });
+                // Красим в белый последний закрашенный прямоугольник.
+                Application.Current.Dispatcher.Invoke(() => ChangeColor(DiagramSource, num - i -2, Colors.White));
+                OnCollectionChanged(NotifyCollectionChangedAction.Replace);
+                // Проход без замены признак отсортированной последовательности.
                 if (hasSwap == false) return;
             }
         });
-
-        DiagramItem ChangeColor(DiagramItem item, Color color)
+        
+        void ChangeColor(ObservableCollection<DiagramItem> collection, int index, Color color)
         {
-            var newItem = item;
+            var newItem = collection[index];
             newItem.Color = new SolidColorBrush(color);
-            return newItem;
+            collection[index] = newItem;
         }
     }
 }
