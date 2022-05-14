@@ -38,60 +38,57 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        await BubbleSortObservableCollection();
+        await BubbleSortObservableCollectionAsync();
     }
 
     #endregion
 
     public ObservableCollection<DiagramItem> DiagramSource { get; set; }
 
-    public async Task BubbleSortObservableCollection()
+    public async Task BubbleSortObservableCollectionAsync()
     {
-        await Task.Run(() =>
+        int num = DiagramSource.Count;
+        for (int i = 0; i < num - 1; i++)
         {
-            int num = DiagramSource.Count;
-            for (int i = 0; i < num - 1; i++)
+            var hasSwap = false;
+            for (int j = 0; j < num - i - 1; j++)
             {
-                var hasSwap = false;
-                for (int j = 0; j < num - i - 1; j++)
+                // Текущий элемент.
+                var j1 = j;
+                // Закрашиваем текущий элемент с перестановкой.
+                if (DiagramSource[j1].Value > DiagramSource[j1 + 1].Value)
                 {
-                    // Текущий элемент.
-                    var j1 = j;
-                    // Закрашиваем текущий элемент с перестановкой.
-                    if (DiagramSource[j1].Value > DiagramSource[j1 + 1].Value)
+                    hasSwap = true;
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        hasSwap = true;
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            if (j1 > 0)
-                                ChangeColor(DiagramSource, j1 - 1, Colors.White);
-                            ChangeColor(DiagramSource, j1, Colors.Orange);
-                            (DiagramSource[j1], DiagramSource[j1 + 1]) = (DiagramSource[j1 + 1], DiagramSource[j1]);
-                        });
-                    }
-                    // Закрашиваем текущий элемент без перестановки.
-                    else
-                    {
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            if (j1 > 0)
-                                ChangeColor(DiagramSource, j1 - 1, Colors.White);
-                            ChangeColor(DiagramSource, j1, Colors.Orange);
-                        });
-
-                    }
-                    OnCollectionChanged(NotifyCollectionChangedAction.Replace);
-                    Thread.Sleep(100);
+                        if (j1 > 0)
+                            ChangeColor(DiagramSource, j1 - 1, Colors.White);
+                        ChangeColor(DiagramSource, j1, Colors.Orange);
+                        (DiagramSource[j1], DiagramSource[j1 + 1]) = (DiagramSource[j1 + 1], DiagramSource[j1]);
+                    });
                 }
+                // Закрашиваем текущий элемент без перестановки.
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        if (j1 > 0)
+                            ChangeColor(DiagramSource, j1 - 1, Colors.White);
+                        ChangeColor(DiagramSource, j1, Colors.Orange);
+                    });
 
-                // Красим в белый последний закрашенный прямоугольник.
-                Application.Current.Dispatcher.Invoke(() => ChangeColor(DiagramSource, num - i -2, Colors.White));
+                }
                 OnCollectionChanged(NotifyCollectionChangedAction.Replace);
-                // Проход без замены признак отсортированной последовательности.
-                if (hasSwap == false) return;
+                await Task.Delay(100);
             }
-        });
-        
+
+            // Красим в белый последний закрашенный прямоугольник.
+            Application.Current.Dispatcher.Invoke(() => ChangeColor(DiagramSource, num - i - 2, Colors.White));
+            OnCollectionChanged(NotifyCollectionChangedAction.Replace);
+            // Проход без замены признак отсортированной последовательности.
+            if (hasSwap == false) return;
+        }
+
         void ChangeColor(ObservableCollection<DiagramItem> collection, int index, Color color)
         {
             var newItem = collection[index];
