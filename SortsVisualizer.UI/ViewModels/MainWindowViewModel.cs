@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using MailSender.lib.Commands;
+using SortsVisualizer.lib.Models;
 using SortsVisualizer.UI.Data;
 
 namespace SortsVisualizer.UI.ViewModels;
@@ -21,10 +23,10 @@ public class MainWindowViewModel : INotifyCollectionChanged
     }
 
     #endregion
-    
+
     public MainWindowViewModel()
     {
-        DiagramSourceObservableCollection = TestData.ObservableCollection;
+        DiagramSource = TestData.ObservableCollection;
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
     }
 
@@ -41,26 +43,58 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     #endregion
 
-    public ObservableCollection<int> DiagramSourceObservableCollection { get; set; }
+    public ObservableCollection<DiagramItem> DiagramSource { get; set; }
 
     public async Task BubbleSortObservableCollection()
     {
         await Task.Run(() =>
         {
-            int num = DiagramSourceObservableCollection.Count;
+            int num = DiagramSource.Count;
             for (int i = 0; i < num - 1; i++)
             {
-                for (int j = 0; j < num - i - 1; j++)
+                var hasSwap = false;
+                for (int j = 0; j < num - 1; j++)
                 {
                     var j1 = j;
-                    if (DiagramSourceObservableCollection[j1] > DiagramSourceObservableCollection[j1 + 1])
+                    if (DiagramSource[j1].Value > DiagramSource[j1 + 1].Value)
                     {
-                        Application.Current.Dispatcher.Invoke(() => (DiagramSourceObservableCollection[j1], DiagramSourceObservableCollection[j1 + 1]) = (DiagramSourceObservableCollection[j1 + 1], DiagramSourceObservableCollection[j1]));
+                        hasSwap = true;
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (j1 > 0)
+                                DiagramSource[j1 - 1] = ChangeColor(DiagramSource[j1 - 1], Colors.White);
+                            DiagramSource[j1] = ChangeColor(DiagramSource[j1], Colors.Orange);
+                            (DiagramSource[j1], DiagramSource[j1 + 1]) = (DiagramSource[j1 + 1], DiagramSource[j1]);
+                        });
                         OnCollectionChanged(NotifyCollectionChangedAction.Replace);
-                        Thread.Sleep(500);
                     }
+                    else
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (j1 > 0)
+                                DiagramSource[j1 - 1] = ChangeColor(DiagramSource[j1 - 1], Colors.White);
+                            DiagramSource[j1] = ChangeColor(DiagramSource[j1], Colors.Orange);
+                        });
+                        OnCollectionChanged(NotifyCollectionChangedAction.Replace);
+                    }
+                    Thread.Sleep(50);
                 }
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DiagramSource[num - 1] = ChangeColor(DiagramSource[num - 1], Colors.White);
+                    DiagramSource[num - 2] = ChangeColor(DiagramSource[num - 2], Colors.White);
+                });
+                if (hasSwap == false) return;
             }
         });
+
+        DiagramItem ChangeColor(DiagramItem item, Color color)
+        {
+            var newItem = item;
+            newItem.Color = new SolidColorBrush(color);
+            return newItem;
+        }
     }
 }
