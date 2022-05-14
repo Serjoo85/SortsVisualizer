@@ -8,8 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\SortsVisualizer.lib\SortsVisualizer.lib.csproj" />
   </ItemGroup>
 
 </Project>
