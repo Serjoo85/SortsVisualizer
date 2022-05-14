@@ -11,7 +11,7 @@
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <StackPanel>
-        <ItemsControl ItemsSource="{Binding DiagramSourceObservableCollection}" HorizontalAlignment="Center">
+        <ItemsControl ItemsSource="{Binding DiagramSource}" HorizontalAlignment="Center">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"
@@ -24,9 +24,10 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Rectangle Height="{Binding Path=.}"
-                               Width="50"
+                    <Rectangle Height="{Binding Height}"
+                               Width="{Binding Width}"
                                Stroke="Black"
+                               Fill="{Binding Color}"
                                VerticalAlignment="Bottom"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
