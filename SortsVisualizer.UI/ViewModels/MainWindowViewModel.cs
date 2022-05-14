@@ -1,10 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using MailSender.lib.Commands;
+using SortsVisualizer.lib.Enums;
+using SortsVisualizer.lib.Interfaces;
+using SortsVisualizer.lib.Models;
+using SortsVisualizer.lib.Services;
 using SortsVisualizer.UI.Data;
 
 namespace SortsVisualizer.UI.ViewModels;
@@ -21,12 +25,6 @@ public class MainWindowViewModel : INotifyCollectionChanged
     }
 
     #endregion
-    
-    public MainWindowViewModel()
-    {
-        DiagramSourceObservableCollection = TestData.ObservableCollection;
-        StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
-    }
 
     #region Commands
 
@@ -36,31 +34,24 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        await BubbleSortObservableCollection();
+        var sorter = _sorterService.GetSorter(SortType.Bubble);
+        await sorter.StartAsync(DiagramSource);
     }
 
     #endregion
 
-    public ObservableCollection<int> DiagramSourceObservableCollection { get; set; }
+    #region Properties
 
-    public async Task BubbleSortObservableCollection()
+    public ObservableCollection<DiagramItem> DiagramSource { get; set; }
+    private readonly ISorterService _sorterService;
+
+
+    #endregion
+
+    public MainWindowViewModel()
     {
-        await Task.Run(() =>
-        {
-            int num = DiagramSourceObservableCollection.Count;
-            for (int i = 0; i < num - 1; i++)
-            {
-                for (int j = 0; j < num - i - 1; j++)
-                {
-                    var j1 = j;
-                    if (DiagramSourceObservableCollection[j1] > DiagramSourceObservableCollection[j1 + 1])
-                    {
-                        Application.Current.Dispatcher.Invoke(() => (DiagramSourceObservableCollection[j1], DiagramSourceObservableCollection[j1 + 1]) = (DiagramSourceObservableCollection[j1 + 1], DiagramSourceObservableCollection[j1]));
-                        OnCollectionChanged(NotifyCollectionChangedAction.Replace);
-                        Thread.Sleep(500);
-                    }
-                }
-            }
-        });
+        DiagramSource = TestData.ObservableCollection;
+        _sorterService = new SorterService(OnCollectionChanged);
+        StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
     }
 }
