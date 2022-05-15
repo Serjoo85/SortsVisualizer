@@ -8,17 +8,17 @@ namespace SortsVisualizer.lib.Services;
 
 public class DiagramItemService : IDiagramItemService
 {
-    private ObservableCollection<DiagramItem> _items = null!; public ObservableCollection<DiagramItem> Items => _items ??= GetCollection(20);
-    private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
-
-
-    private static readonly Random Rnd = new Random();
-
     private const int HeightFactor = 25;
     private const int Width = 50;
+    private readonly int _elementCount;
+    private ObservableCollection<DiagramItem> _items = null!; 
+    public ObservableCollection<DiagramItem> Items => _items ??= GetCollection(_elementCount);
+    private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
+    private static readonly Random Rnd = new Random();
 
-    public DiagramItemService(Action<NotifyCollectionChangedAction> onCollectionChanged)
+    public DiagramItemService(Action<NotifyCollectionChangedAction> onCollectionChanged, int elementCount = 20)
     {
+        _elementCount = elementCount;
         _onCollectionChanged = onCollectionChanged;
     }
 
@@ -72,7 +72,7 @@ public class DiagramItemService : IDiagramItemService
 
     public async Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color, int delay = 50)
     {
-        
+        var x = Thread.CurrentThread.ManagedThreadId;
 
         for (int i = 0; i < collection.Count; i++)
         {

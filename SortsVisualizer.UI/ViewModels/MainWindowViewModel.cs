@@ -1,7 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using MailSender.lib.Commands;
+using SortsVisualizer.lib.Commands;
 using SortsVisualizer.lib.Enums;
 using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
@@ -28,29 +29,32 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     public ICommand StartSortingCommand { get; }
 
-    private bool CanStartSortingCommandExecute(object o) => _current is ProcessStates.NothingToDo;
+    private bool CanStartSortingCommandExecute(object o) => _state is ProcessStates.NothingToDo;
 
+    public void RaiseCanExecuteChanged() => CommandManager.InvalidateRequerySuggested();
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        _current = ProcessStates.Sorting;
+        _state = ProcessStates.Sorting;
         await SorterService.StartAsync(SortType.Bubble, DiagramSource);
-        _current = ProcessStates.NothingToDo;
+        _state = ProcessStates.NothingToDo;
+        RaiseCanExecuteChanged();
     }
 
     #endregion
+
 
     #region Shuffle
 
     public ICommand ShuffleCommand { get; }
 
-    private bool CanShuffleCommandExecute(object o) => _current is ProcessStates.NothingToDo;
+    private bool CanShuffleCommandExecute(object o) => _state is ProcessStates.NothingToDo;
 
     private void OnShuffleCommandExecuted(object o)
     {
-        _current = ProcessStates.Shuffling;
+        _state = ProcessStates.Shuffling;
         DiagramItemService.Shuffle();
-        _current = ProcessStates.NothingToDo;
+        _state = ProcessStates.NothingToDo;
     }
 
     #endregion
@@ -59,15 +63,21 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     public ICommand StopSortingCommand { get; }
 
-    private bool CanStopSortingCommandExecute(object o) => _current is ProcessStates.Sorting;
+    private bool CanStopSortingCommandExecute(object o) => _state is ProcessStates.Sorting;
 
     private void OnStopSortingCommandExecuted(object o)
     {
         SorterService.Stop();
-        _current = ProcessStates.NothingToDo;
+        _state = ProcessStates.NothingToDo;
     }
 
     #endregion
+
+    #endregion
+
+    #region Fields
+
+    private ProcessStates _state;
 
     #endregion
 
@@ -77,14 +87,13 @@ public class MainWindowViewModel : INotifyCollectionChanged
     public ISorterService SorterService { get; }
     public IDiagramItemService DiagramItemService { get;}
     public string[] SortersTypes => SorterService.GetSortersTypes();
-    private ProcessStates _current;
-
+    public SortType SelectedSort { get; set; }
 
     #endregion
 
     public MainWindowViewModel()
     {
-        _current = ProcessStates.NothingToDo;
+        _state = ProcessStates.NothingToDo;
 
         DiagramItemService = new DiagramItemService(OnCollectionChanged);
         DiagramSource = DiagramItemService.Items;
