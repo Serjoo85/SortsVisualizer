@@ -37,26 +37,31 @@
             <ComboBox
                 x:Name="SortList"
                 SelectedIndex="0"
-                Width="200" 
-                Margin="0,0,20,0"/>
+                Width="Auto" 
+                Margin="0,0,20,0"
+                ItemsSource="{Binding SortersTypes}"
+                FontSize="18"
+                HorizontalContentAlignment="Center"/>
             <Button Height="30"
                     Width="80"
                     Content="Start"
                     Command="{Binding StartSortingCommand}"
                     HorizontalAlignment="Right"
-                    Margin="0,0,20,0"/>
+                    Margin="0,0,20,0"
+                    FontSize="16"/>
             <Button Height="30"
                     Width="80"
                     Content="Stop"
                     Command="{Binding StartSortingCommand}"
                     HorizontalAlignment="Right"
-                    Margin="0,0,20,0"/>
+                    Margin="0,0,20,0"
+                    FontSize="16"/>
             <Button Height="30"
                     Width="80"
                     Content="Shuffle"
                     Command="{Binding StartSortingCommand}"
                     HorizontalAlignment="Right"
-                    />
+                    FontSize="16"/>
         </StackPanel>
 
     </StackPanel>

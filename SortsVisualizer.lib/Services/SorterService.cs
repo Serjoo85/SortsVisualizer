@@ -30,4 +30,9 @@ public class SorterService : ISorterService
             throw new ArgumentException(nameof(type));
         return _sorters[type];
     }
+
+    public string[] GetSortersTypes()
+    {
+        return _sorters.Select(s => s.Key.ToString()).ToArray();
+    }
 }

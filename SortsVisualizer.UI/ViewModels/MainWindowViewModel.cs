@@ -34,7 +34,7 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        var sorter = _sorterService.GetSorter(SortType.Bubble);
+        var sorter = SorterService.GetSorter(SortType.Bubble);
         await sorter.StartAsync(DiagramSource);
     }
 
@@ -43,15 +43,16 @@ public class MainWindowViewModel : INotifyCollectionChanged
     #region Properties
 
     public ObservableCollection<DiagramItem> DiagramSource { get; set; }
-    private readonly ISorterService _sorterService;
+    public ISorterService SorterService { get; }
 
+    public string[] SortersTypes => SorterService.GetSortersTypes();
 
     #endregion
 
     public MainWindowViewModel()
     {
         DiagramSource = TestData.ObservableCollection;
-        _sorterService = new SorterService(OnCollectionChanged);
+        SorterService = new SorterService(OnCollectionChanged);
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
     }
 }
