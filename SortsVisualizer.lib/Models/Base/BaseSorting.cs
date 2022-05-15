@@ -20,7 +20,7 @@ public abstract class BaseSorting
         try
         {
             await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.White);
-            await SortAsync(collection, Cts.Token);
+            await SortAsync(collection, Cts.Token, 80);
             await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.Green);
         }
         catch (OperationCanceledException e)

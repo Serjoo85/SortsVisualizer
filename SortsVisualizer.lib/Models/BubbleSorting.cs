@@ -31,7 +31,11 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                     if (j > 0)
                         ColorChanger.Change(j - 1, Colors.White, collection);
                     ColorChanger.Change(j, Colors.Orange, collection);
+                    ColorChanger.ReplacementNotify(); ;
+                    await Task.Delay(delay - 10, cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
+                    ColorChanger.ReplacementNotify(); ;
+                    await Task.Delay(delay - 10, cancel);
 
                 }
                 // Закрашиваем текущий элемент без перестановки.
@@ -41,10 +45,9 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                     if (j > 0)
                         ColorChanger.Change(j - 1, Colors.White, collection);
                     ColorChanger.Change(j, Colors.Orange, collection);
+                    ColorChanger.ReplacementNotify(); ;
+                    await Task.Delay(delay, cancel);
                 }
-
-                ColorChanger.ReplacementNotify(); ;
-                await Task.Delay(delay, cancel);
             }
 
             // Красим в белый последний закрашенный прямоугольник.
