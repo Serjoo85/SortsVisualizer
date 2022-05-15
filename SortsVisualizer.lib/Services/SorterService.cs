@@ -11,11 +11,11 @@ public class SorterService : ISorterService
     private readonly Dictionary<SortType, ISorterStrategy> _sorters;
     private ISorterStrategy _startedStrategy = null!;
 
-    public SorterService(Action<NotifyCollectionChangedAction> onCollectionChanged)
+    public SorterService(IColorChanger colorChanger)
     {
         _sorters = new()
         {
-            { SortType.Bubble, new BubbleSorting(onCollectionChanged) },
+            { SortType.Bubble, new BubbleSorting(colorChanger) },
         };
     }
 

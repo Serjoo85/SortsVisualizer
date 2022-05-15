@@ -1,25 +1,27 @@
 ﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Windows.Media;
+using SortsVisualizer.lib.Interfaces;
 
 namespace SortsVisualizer.lib.Models.Base;
 
 public abstract class BaseSorting
 {
-    protected CancellationTokenSource _cts = null!;
-    protected readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
+    protected CancellationTokenSource Cts = null!;
+    protected IColorChanger ColorChanger;
 
-    protected BaseSorting(Action<NotifyCollectionChangedAction> onCollectionChanged)
+    protected BaseSorting(IColorChanger colorChanger)
     {
-        _onCollectionChanged = onCollectionChanged;
+        ColorChanger = colorChanger;
     }
 
     public async Task StartAsync(ObservableCollection<DiagramItem> collection)
     {
-        _cts = new CancellationTokenSource();
+        Cts = new CancellationTokenSource();
         try
         {
-            await SortAsync(collection, _cts.Token);
+            await ColorChanger.FillAll(collection, CancellationToken.None);
+            await SortAsync(collection, Cts.Token);
+            await ColorChanger.FinishPaint(collection, CancellationToken.None);
         }
         catch (OperationCanceledException e)
         {
@@ -27,28 +29,12 @@ public abstract class BaseSorting
         }
         finally
         {
-            _cts.Dispose();
+            Cts.Dispose();
+            Cts = new CancellationTokenSource();
+            await ColorChanger.FillAll(collection, CancellationToken.None);
         }
     }
 
     protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel);
 
-    protected void ChangeColor(int index, Color color, ObservableCollection<DiagramItem> collection)
-    {
-        var newItem = collection[index];
-        newItem.Color = new SolidColorBrush(color);
-        collection[index] = newItem;
-    }
-
-    protected async Task FinishPaint(ObservableCollection<DiagramItem> collection, CancellationToken cancel)
-    {
-        for (int i = 0; i < collection.Count; i++)
-        {
-            if (collection[i].Color.Color == Colors.Green)
-                return;
-            ChangeColor(i, Colors.Green, collection);
-            await Task.Delay(50, cancel);
-            _onCollectionChanged(NotifyCollectionChangedAction.Replace);
-        }
-    }
 }
