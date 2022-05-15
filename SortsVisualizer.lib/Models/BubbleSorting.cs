@@ -67,43 +67,4 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
     {
         Cts.Cancel();
     }
-
-    /*
-    int n = 10;
-
-            //Keep looping until list is sorted
-            do
-        {    //This variable is used to store the
-            //position of the last swap
-            int sw = 0;
-
-            //Loop through all elements in the list
-            for (int i = 0; i<n - 1; i++) 
-            { 
-                //If the current pair of elements is 
-                //not in order then swap them and update 
-                //the position of the swap 
-                if (A[i] > A[i + 1])
-                {
-                    //Swap
-                    int temp = A[i];
-    A[i] = A[i + 1];
-                    A[i + 1] = temp;
-
-                    //Save swap position
-                    sw = i + 1;
-                }
-            }
-
-            //We do not need to visit all elements
-            //we only need to go as far as the last swap
-            //so we update (n)
-            n = sw;
-        }
-
-    //Once n = 1 then the whole list is sorted
-    while (n > 1) ;
-    }*/
-
-
 }
