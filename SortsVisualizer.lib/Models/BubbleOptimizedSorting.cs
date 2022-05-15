@@ -1,53 +1,95 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Media;
 using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models.Base;
 
 namespace SortsVisualizer.lib.Models;
 
-public class BubbleOptimizedSorting : BaseSorting
+public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
 {
     public BubbleOptimizedSorting(IColorChanger colorChanger) : base(colorChanger)
     {
     }
 
-    protected override async Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel)
+    protected override async Task SortAsync(
+        ObservableCollection<DiagramItem> collection,
+        CancellationToken cancel, int delay = 100)
     {
-        int n = 10;
-
-        //Keep looping until list is sorted
+        int nonSortedElement = collection.Count;
+        bool hasSwap1 = false;
+        bool hasSwap2 = false;
+        int elementsCount = collection.Count;
+        int interactionsCount = 0;
         do
-        {    //This variable is used to store the
-             //position of the last swap
-            int sw = 0;
-
-            //Loop through all elements in the list
-            for (int i = 0; i < n - 1; i++)
+        {
+            hasSwap1 = false;
+            for (int i = interactionsCount; i < elementsCount - interactionsCount - 1; i++)
             {
-                //If the current pair of elements is 
-                //not in order then swap them and update 
-                //the position of the swap 
+                // Красим предыдущий элемент в белый.
+                if (i > 0 && collection[i - 1].Color.Color != Colors.Green)
+                    ColorChanger.Change(i - 1, Colors.White, collection);
+                // Красим текущий в оранжевый.
+                ColorChanger.Change(i, Colors.Orange, collection);
+                ColorChanger.ReplacementNotify();
+
+                await Task.Delay(delay, cancel);
+
+                // Меняем местами если больше.
                 if (collection[i].Value > collection[i + 1].Value)
                 {
-                    //Swap
                     (collection[i], collection[i + 1]) = (collection[i + 1], collection[i]);
                     ColorChanger.ReplacementNotify();
-                    //Save swap position
-                    sw = i + 1;
-
-                    await Task.Delay(150, cancel);
+                    await Task.Delay(delay, cancel);
+                    hasSwap1 = true;
                 }
             }
 
-            //We do not need to visit all elements
-            //we only need to go as far as the last swap
-            //so we update (n)
-            n = sw;
-        }
+            // Красим зелёным последний отсортированный элемент.
+            ColorChanger.Change(elementsCount - interactionsCount - 1, Colors.Green, collection);
+            ColorChanger.ReplacementNotify();
 
-        //Once n = 1 then the whole list is sorted
-        while (n > 1);
+            if (!hasSwap1 && !hasSwap2) return;
+            nonSortedElement--;
+            hasSwap2 = false;
+            for (int i = elementsCount - interactionsCount - 1; i > interactionsCount; i--)
+            {
+                if (i < elementsCount - 1)
+                {
+                    if (collection[i + 1].Color.Color != Colors.Green)
+                        ColorChanger.Change(i + 1, Colors.White, collection);
+                }
+
+                // Красим текущий элемент в оранжевый если он не крайний отсортированный.
+                if(i != elementsCount - interactionsCount - 1)
+                    ColorChanger.Change(i, Colors.Orange, collection);
+
+                ColorChanger.ReplacementNotify();
+
+                await Task.Delay(delay, cancel);
+
+                // Меняем местами если меньше.
+                if (collection[i].Value < collection[i - 1].Value)
+                {
+                    (collection[i], collection[i - 1]) = (collection[i - 1], collection[i]);
+                    ColorChanger.ReplacementNotify();
+                    await Task.Delay(delay, cancel);
+                    hasSwap2 = true;
+                }
+            }
+
+            // Красим зелёным последний отсортированный элемент.
+            ColorChanger.Change(interactionsCount, Colors.Green, collection);
+            ColorChanger.ReplacementNotify();
+
+            if (!hasSwap1 && !hasSwap2) return;
+            nonSortedElement--;
+
+            interactionsCount++;
+        } while (nonSortedElement > 0);
     }
 
-
-
+    public void Stop()
+    {
+        Cts.Cancel();
+    }
 }

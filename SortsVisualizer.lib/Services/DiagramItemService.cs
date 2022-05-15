@@ -11,7 +11,7 @@ public class DiagramItemService : IDiagramItemService
     private const int HeightFactor = 25;
     private const int Width = 50;
     private readonly int _elementCount;
-    private ObservableCollection<DiagramItem> _items = null!; 
+    private ObservableCollection<DiagramItem> _items = null!;
     public ObservableCollection<DiagramItem> Items => _items ??= GetCollection(_elementCount);
     private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
     private static readonly Random Rnd = new Random();
@@ -35,7 +35,6 @@ public class DiagramItemService : IDiagramItemService
             });
 
         MixCollection(items);
-
         return items;
     }
 
@@ -47,36 +46,41 @@ public class DiagramItemService : IDiagramItemService
     private static void MixCollection(ObservableCollection<DiagramItem> items)
     {
         for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 20 - 3; j++)
-        {
-            var r = Rnd.Next(1, 3);
-            (items[j], items[j + r]) = (items[j + r], items[j]);
-        }
+            for (int j = 0; j < 20 - 3; j++)
+            {
+                var r = Rnd.Next(1, 3);
+                (items[j], items[j + r]) = (items[j + r], items[j]);
+            }
 
         for (int i = 0; i < 2; i++)
-        {
             for (int j = 19; j > 3; j--)
             {
                 var r = Rnd.Next(1, 3);
                 (items[j], items[j - r]) = (items[j - r], items[j]);
             }
-        }
     }
 
-    public void Change(int index, Color color, ObservableCollection<DiagramItem> collection)
+    public void Change(
+        int index,
+        Color color,
+        ObservableCollection<DiagramItem> collection)
     {
         var newItem = collection[index];
         newItem.Color = new SolidColorBrush(color);
         collection[index] = newItem;
     }
 
-    public async Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color, int delay = 50)
+    public async Task FillAllWithAnimation(
+        ObservableCollection<DiagramItem> collection,
+        CancellationToken cancel,
+        Color color,
+        int delay = 50)
     {
         var x = Thread.CurrentThread.ManagedThreadId;
 
         for (int i = 0; i < collection.Count; i++)
         {
-            if(collection[i].Color.Color == color)
+            if (collection[i].Color.Color == color)
                 continue;
             Change(i, color, collection);
             await Task.Delay(delay, cancel);

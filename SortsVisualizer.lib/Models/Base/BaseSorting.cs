@@ -20,7 +20,7 @@ public abstract class BaseSorting
         try
         {
             await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.White);
-            await SortAsync(collection, Cts.Token);
+            await SortAsync(collection, Cts.Token, 80);
             await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.Green);
         }
         catch (OperationCanceledException e)
@@ -35,6 +35,6 @@ public abstract class BaseSorting
         }
     }
 
-    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel);
+    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, int delay = 100);
 
 }
