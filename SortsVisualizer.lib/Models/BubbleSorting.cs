@@ -16,6 +16,7 @@ public class BubbleSorting : ISorterStrategy
     {
         _onCollectionChanged = onCollectionChanged;
     }
+
     public async Task StartAsync(ObservableCollection<DiagramItem> collection)
     {
         _cts = new CancellationTokenSource();
@@ -44,7 +45,7 @@ public class BubbleSorting : ISorterStrategy
             for (int j = 0; j < num - i - 1; j++)
             {
                 // j - индекс текущего элемента.
-                
+
                 // Закрашиваем текущий элемент с перестановкой.
                 if (collection[j].Value > collection[j + 1].Value)
                 {
@@ -68,13 +69,17 @@ public class BubbleSorting : ISorterStrategy
                     });
 
                 }
+
                 _onCollectionChanged(NotifyCollectionChangedAction.Replace);
                 await Task.Delay(100, cancel);
             }
 
             // Красим в белый последний закрашенный прямоугольник.
             Application.Current.Dispatcher.Invoke(() =>
-                ChangeColor(num - i - 2, Colors.White));
+            {
+                ChangeColor(num - i - 1, Colors.White);
+                ChangeColor(num - i - 2, Colors.White);
+            });
             _onCollectionChanged(NotifyCollectionChangedAction.Replace);
             // Проход без замены признак отсортированной последовательности.
             if (hasSwap == false) return;
@@ -92,4 +97,40 @@ public class BubbleSorting : ISorterStrategy
     {
         _cts?.Cancel();
     }
+    //    int n = 10;
+
+    //        //Keep looping until list is sorted
+    //        do
+    //    {    //This variable is used to store the
+    //        //position of the last swap
+    //        int sw = 0;
+
+    //        //Loop through all elements in the list
+    //        for (int i = 0; i<n - 1; i++) 
+    //        { 
+    //            //If the current pair of elements is 
+    //            //not in order then swap them and update 
+    //            //the position of the swap 
+    //            if (A[i] > A[i + 1])
+    //            {
+    //                //Swap
+    //                int temp = A[i];
+    //                A[i] = A[i + 1];
+    //                A[i + 1] = temp;
+
+    //                //Save swap position
+    //                sw = i + 1;
+    //            }
+    //        }
+
+    //        //We do not need to visit all elements
+    //        //we only need to go as far as the last swap
+    //        //so we update (n)
+    //        n = sw;
+    //    }
+
+    ////Once n = 1 then the whole list is sorted
+    //while (n > 1) ;
+    //}
+
 }

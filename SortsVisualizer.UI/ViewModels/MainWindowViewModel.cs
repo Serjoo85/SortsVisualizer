@@ -1,15 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using MailSender.lib.Commands;
 using SortsVisualizer.lib.Enums;
 using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
 using SortsVisualizer.lib.Services;
-using SortsVisualizer.UI.Data;
 
 namespace SortsVisualizer.UI.ViewModels;
 
@@ -41,6 +37,19 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     #endregion
 
+    #region Shuffle
+
+    public ICommand ShuffleCommand { get; }
+
+    private bool CanShuffleCommandExecute(object o) => true;
+
+    private void OnShuffleCommandExecuted(object o)
+    {
+        DiagramItemService.Shuffle();
+    }
+
+    #endregion
+
     #region Stop
 
     public ICommand StopSortingCommand { get; }
@@ -60,16 +69,19 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     public ObservableCollection<DiagramItem> DiagramSource { get; set; }
     public ISorterService SorterService { get; }
-
+    public IDiagramItemService DiagramItemService { get;}
     public string[] SortersTypes => SorterService.GetSortersTypes();
 
     #endregion
 
     public MainWindowViewModel()
     {
-        DiagramSource = TestData.ObservableCollection;
         SorterService = new SorterService(OnCollectionChanged);
+        DiagramItemService = new DiagramItemService();
+        DiagramSource = DiagramItemService.Items;
+
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
         StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);
+        ShuffleCommand = new LambdaCommand(OnShuffleCommandExecuted, CanShuffleCommandExecute);
     }
 }

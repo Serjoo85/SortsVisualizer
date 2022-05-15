@@ -59,7 +59,7 @@
             <Button Height="30"
                     Width="80"
                     Content="Shuffle"
-                    Command="{Binding StartSortingCommand}"
+                    Command="{Binding ShuffleCommand}"
                     HorizontalAlignment="Right"
                     FontSize="16"/>
         </StackPanel>
