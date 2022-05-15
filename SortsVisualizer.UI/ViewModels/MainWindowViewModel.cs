@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using SortsVisualizer.lib.Commands;
 using SortsVisualizer.lib.Enums;
@@ -10,7 +11,7 @@ using SortsVisualizer.lib.Services;
 
 namespace SortsVisualizer.UI.ViewModels;
 
-public class MainWindowViewModel : INotifyCollectionChanged
+public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChanged
 {
     #region ICollectionChanged
 
@@ -36,7 +37,7 @@ public class MainWindowViewModel : INotifyCollectionChanged
     private async void OnStartSortingCommandExecuted(object o)
     {
         _state = ProcessStates.Sorting;
-        await SorterService.StartAsync(SortType.Bubble, DiagramSource);
+        await SorterService.StartAsync(SelectedSort, DiagramSource);
         _state = ProcessStates.NothingToDo;
         RaiseCanExecuteChanged();
     }
@@ -78,6 +79,7 @@ public class MainWindowViewModel : INotifyCollectionChanged
     #region Fields
 
     private ProcessStates _state;
+    private SortType _selectedSort;
 
     #endregion
 
@@ -87,7 +89,16 @@ public class MainWindowViewModel : INotifyCollectionChanged
     public ISorterService SorterService { get; }
     public IDiagramItemService DiagramItemService { get;}
     public string[] SortersTypes => SorterService.GetSortersTypes();
-    public SortType SelectedSort { get; set; }
+
+    public SortType SelectedSort
+    {
+        get => _selectedSort;
+        set
+        {
+            _selectedSort = value;
+            OnPropertyChanged(nameof(SelectedSort));
+        }
+    }
 
     #endregion
 
@@ -102,5 +113,13 @@ public class MainWindowViewModel : INotifyCollectionChanged
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
         StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);
         ShuffleCommand = new LambdaCommand(OnShuffleCommandExecuted, CanShuffleCommandExecute);
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    [NotifyPropertyChangedInvocator]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

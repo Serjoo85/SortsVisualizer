@@ -15,7 +15,7 @@ public class SorterService : ISorterService
         _sorters = new()
         {
             { SortType.Bubble, new BubbleSorting(colorChanger) },
-            { SortType.OptimizedBubble, new BubbleSorting(colorChanger) },
+            { SortType.OptimizedBubble, new BubbleOptimizedSorting(colorChanger) },
         };
     }
 
