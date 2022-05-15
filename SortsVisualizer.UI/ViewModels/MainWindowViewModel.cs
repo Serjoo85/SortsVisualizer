@@ -28,11 +28,14 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     public ICommand StartSortingCommand { get; }
 
-    private bool CanStartSortingCommandExecute(object o) => true;
+    private bool CanStartSortingCommandExecute(object o) => _current is ProcessStates.NothingToDo;
+
 
     private async void OnStartSortingCommandExecuted(object o)
     {
+        _current = ProcessStates.Sorting;
         await SorterService.StartAsync(SortType.Bubble, DiagramSource);
+        _current = ProcessStates.NothingToDo;
     }
 
     #endregion
@@ -41,11 +44,13 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     public ICommand ShuffleCommand { get; }
 
-    private bool CanShuffleCommandExecute(object o) => true;
+    private bool CanShuffleCommandExecute(object o) => _current is ProcessStates.NothingToDo;
 
     private void OnShuffleCommandExecuted(object o)
     {
+        _current = ProcessStates.Shuffling;
         DiagramItemService.Shuffle();
+        _current = ProcessStates.NothingToDo;
     }
 
     #endregion
@@ -54,12 +59,12 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     public ICommand StopSortingCommand { get; }
 
-    private bool CanStopSortingCommandExecute(object o) => true;
+    private bool CanStopSortingCommandExecute(object o) => _current is ProcessStates.Sorting;
 
     private void OnStopSortingCommandExecuted(object o)
     {
         SorterService.Stop();
-        
+        _current = ProcessStates.NothingToDo;
     }
 
     #endregion
@@ -72,11 +77,15 @@ public class MainWindowViewModel : INotifyCollectionChanged
     public ISorterService SorterService { get; }
     public IDiagramItemService DiagramItemService { get;}
     public string[] SortersTypes => SorterService.GetSortersTypes();
+    private ProcessStates _current;
+
 
     #endregion
 
     public MainWindowViewModel()
     {
+        _current = ProcessStates.NothingToDo;
+
         DiagramItemService = new DiagramItemService(OnCollectionChanged);
         DiagramSource = DiagramItemService.Items;
         SorterService = new SorterService(DiagramItemService);
