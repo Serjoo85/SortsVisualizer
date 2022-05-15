@@ -13,15 +13,16 @@ public interface IColorChanger
     /// <param name="color">Новый цвет</param>
     /// <param name="collection">Ссылка на коллекцию</param>
     public void Change(int index, Color color, ObservableCollection<DiagramItem> collection);
-    
+
     /// <summary>
     /// Анимация заливки выбранным цветом всех не закрашенных этим цветом элементов. 
     /// </summary>
     /// <param name="collection"></param>
     /// <param name="cancel"></param>
     /// <param name="color"></param>
+    /// <param name="delay">Задержка отрисовки цвета</param>
     /// <returns></returns>
-    public Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color);
+    public Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color, int delay = 50);
 
     public void ReplacementNotify();
 

@@ -47,12 +47,10 @@ public class DiagramItemService : IDiagramItemService
     private static void MixCollection(ObservableCollection<DiagramItem> items)
     {
         for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 20 - 3; j++)
         {
-            for (int j = 0; j < 20 - 3; j++)
-            {
-                var r = Rnd.Next(1, 3);
-                (items[j], items[j + r]) = (items[j + r], items[j]);
-            }
+            var r = Rnd.Next(1, 3);
+            (items[j], items[j + r]) = (items[j + r], items[j]);
         }
 
         for (int i = 0; i < 2; i++)
@@ -72,19 +70,7 @@ public class DiagramItemService : IDiagramItemService
         collection[index] = newItem;
     }
 
-    public async Task FinishPaint(ObservableCollection<DiagramItem> collection, CancellationToken cancel)
-    {
-        for (int i = 0; i < collection.Count; i++)
-        {
-            if (collection[i].Color.Color == Colors.Green)
-                return;
-            Change(i, Colors.Green, collection);
-            await Task.Delay(50, cancel);
-            _onCollectionChanged(NotifyCollectionChangedAction.Replace);
-        }
-    }
-
-    public async Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color)
+    public async Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color, int delay = 50)
     {
         
 
@@ -92,8 +78,8 @@ public class DiagramItemService : IDiagramItemService
         {
             if(collection[i].Color.Color == color)
                 continue;
-            Change(i, Colors.White, collection);
-            await Task.Delay(50, cancel);
+            Change(i, color, collection);
+            await Task.Delay(delay, cancel);
             _onCollectionChanged(NotifyCollectionChangedAction.Replace);
         }
     }
