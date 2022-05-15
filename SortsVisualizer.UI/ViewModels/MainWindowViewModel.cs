@@ -80,8 +80,6 @@ public class MainWindowViewModel : INotifyCollectionChanged
         DiagramItemService = new DiagramItemService(OnCollectionChanged);
         DiagramSource = DiagramItemService.Items;
         SorterService = new SorterService(DiagramItemService);
-        
-        
 
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
         StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);

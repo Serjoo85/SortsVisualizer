@@ -84,12 +84,13 @@ public class DiagramItemService : IDiagramItemService
         }
     }
 
-
-    public async Task FillAll(ObservableCollection<DiagramItem> collection, CancellationToken cancel)
+    public async Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color)
     {
+        
+
         for (int i = 0; i < collection.Count; i++)
         {
-            if(collection[i].Color.Color == Colors.White)
+            if(collection[i].Color.Color == color)
                 continue;
             Change(i, Colors.White, collection);
             await Task.Delay(50, cancel);

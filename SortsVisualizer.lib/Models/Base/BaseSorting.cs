@@ -19,9 +19,9 @@ public abstract class BaseSorting
         Cts = new CancellationTokenSource();
         try
         {
-            await ColorChanger.FillAll(collection, CancellationToken.None);
+            await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.White);
             await SortAsync(collection, Cts.Token);
-            await ColorChanger.FinishPaint(collection, CancellationToken.None);
+            await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.Green);
         }
         catch (OperationCanceledException e)
         {
@@ -31,7 +31,7 @@ public abstract class BaseSorting
         {
             Cts.Dispose();
             Cts = new CancellationTokenSource();
-            await ColorChanger.FillAll(collection, CancellationToken.None);
+            await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.White);
         }
     }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Windows.Media;
 using SortsVisualizer.lib.Models;
 
@@ -16,14 +15,13 @@ public interface IColorChanger
     public void Change(int index, Color color, ObservableCollection<DiagramItem> collection);
     
     /// <summary>
-    /// Анимация заливки зелёным не зелёных элементов.
+    /// Анимация заливки выбранным цветом всех не закрашенных этим цветом элементов. 
     /// </summary>
-    /// <param name="collection">Ссылка на коллекцию</param>
-    /// <param name="cancel">Токен завершения</param>
+    /// <param name="collection"></param>
+    /// <param name="cancel"></param>
+    /// <param name="color"></param>
     /// <returns></returns>
-    public Task FinishPaint(ObservableCollection<DiagramItem> collection, CancellationToken cancel);
-
-    public Task FillAll(ObservableCollection<DiagramItem> collection, CancellationToken cancel);
+    public Task FillAllWithAnimation(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Color color);
 
     public void ReplacementNotify();
 
