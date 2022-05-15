@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:SortsVisualizer.UI.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1050">
+        Title="MainWindow" 
+        Height="625" 
+        Width="1050">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>

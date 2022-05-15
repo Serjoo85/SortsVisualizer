@@ -59,6 +59,7 @@ public class MainWindowViewModel : INotifyCollectionChanged
     private void OnStopSortingCommandExecuted(object o)
     {
         SorterService.Stop();
+        
     }
 
     #endregion
@@ -76,9 +77,9 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     public MainWindowViewModel()
     {
-        SorterService = new SorterService(OnCollectionChanged);
-        DiagramItemService = new DiagramItemService();
+        DiagramItemService = new DiagramItemService(OnCollectionChanged);
         DiagramSource = DiagramItemService.Items;
+        SorterService = new SorterService(DiagramItemService);
 
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
         StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);
