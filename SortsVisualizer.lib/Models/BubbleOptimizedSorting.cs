@@ -10,7 +10,7 @@ public class BubbleOptimizedSorting : BaseSorting
     {
     }
 
-    protected override async Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel)
+    protected override async Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, int delay = 100)
     {
         int n = 10;
 
@@ -47,7 +47,4 @@ public class BubbleOptimizedSorting : BaseSorting
         //Once n = 1 then the whole list is sorted
         while (n > 1);
     }
-
-
-
 }

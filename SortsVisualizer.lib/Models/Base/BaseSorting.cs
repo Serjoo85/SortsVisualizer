@@ -35,6 +35,6 @@ public abstract class BaseSorting
         }
     }
 
-    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel);
+    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, int delay = 100);
 
 }
