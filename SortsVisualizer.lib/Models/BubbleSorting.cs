@@ -1,40 +1,19 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using SortsVisualizer.lib.Interfaces;
+using SortsVisualizer.lib.Models.Base;
 
 namespace SortsVisualizer.lib.Models;
 
-public class BubbleSorting : ISorterStrategy
+public class BubbleSorting : BaseSorting, ISorterStrategy
 {
-    private CancellationTokenSource _cts = null!;
-    private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
-
-    public BubbleSorting(Action<NotifyCollectionChangedAction> onCollectionChanged)
+    public BubbleSorting(Action<NotifyCollectionChangedAction> onCollectionChanged) : base(onCollectionChanged)
     {
-        _onCollectionChanged = onCollectionChanged;
     }
 
-    public async Task StartAsync(ObservableCollection<DiagramItem> collection)
-    {
-        _cts = new CancellationTokenSource();
-        try
-        {
-            await SortAsync(collection, _cts.Token);
-        }
-        catch (OperationCanceledException e)
-        {
-            Console.WriteLine("Action was interrupted by user.");
-        }
-        finally
-        {
-            _cts.Dispose();
-        }
-    }
-
-    private async Task SortAsync(
+    protected override async Task SortAsync(
         ObservableCollection<DiagramItem> collection,
         CancellationToken cancel = default)
     {
@@ -53,8 +32,8 @@ public class BubbleSorting : ISorterStrategy
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         if (j > 0)
-                            ChangeColor(j - 1, Colors.White);
-                        ChangeColor(j, Colors.Orange);
+                            ChangeColor(j - 1, Colors.White, collection);
+                        ChangeColor(j, Colors.Orange, collection);
                         (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
                     });
                 }
@@ -64,8 +43,8 @@ public class BubbleSorting : ISorterStrategy
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         if (j > 0)
-                            ChangeColor(j - 1, Colors.White);
-                        ChangeColor(j, Colors.Orange);
+                            ChangeColor(j - 1, Colors.White, collection);
+                        ChangeColor(j, Colors.Orange, collection);
                     });
 
                 }
@@ -77,26 +56,29 @@ public class BubbleSorting : ISorterStrategy
             // Красим в белый последний закрашенный прямоугольник.
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ChangeColor(num - i - 1, Colors.White);
-                ChangeColor(num - i - 2, Colors.White);
+                ChangeColor(num - i - 1, Colors.Green, collection);
+                ChangeColor(num - i - 2, Colors.White, collection);
             });
             _onCollectionChanged(NotifyCollectionChangedAction.Replace);
             // Проход без замены признак отсортированной последовательности.
-            if (hasSwap == false) return;
+            if (hasSwap == false)
+            {
+                await FinishPaint(collection, cancel);
+                return;
+            }
         }
 
-        void ChangeColor(int index, Color color)
-        {
-            var newItem = collection[index];
-            newItem.Color = new SolidColorBrush(color);
-            collection[index] = newItem;
-        }
+        await FinishPaint(collection, cancel);
+
+
     }
 
     public void Stop()
     {
         _cts?.Cancel();
     }
+
+
     //    int n = 10;
 
     //        //Keep looping until list is sorted
@@ -132,5 +114,6 @@ public class BubbleSorting : ISorterStrategy
     ////Once n = 1 then the whole list is sorted
     //while (n > 1) ;
     //}
+
 
 }
