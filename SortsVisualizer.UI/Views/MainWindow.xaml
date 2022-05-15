@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:SortsVisualizer.UI.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1100">
+        Title="MainWindow" Height="600" Width="1050">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <StackPanel>
-        <ItemsControl ItemsSource="{Binding DiagramSource}" HorizontalAlignment="Center">
+        <ItemsControl ItemsSource="{Binding DiagramSource}" 
+                      HorizontalAlignment="Center"
+                      Margin="0,25,0,0">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"
