@@ -41,9 +41,10 @@
             <ComboBox
                 x:Name="SortList"
                 SelectedIndex="0"
-                Width="Auto" 
+                Width="140" 
                 Margin="0,0,20,0"
                 ItemsSource="{Binding SortersTypes}"
+                SelectedValue="{Binding SelectedSort, Mode=OneWayToSource}"
                 FontSize="18"
                 HorizontalContentAlignment="Center"/>
             <Button Height="30"
