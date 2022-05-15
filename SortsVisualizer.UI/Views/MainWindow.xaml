@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:SortsVisualizer.UI.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1100">
+        Title="MainWindow" Height="600" Width="1050">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <StackPanel>
-        <ItemsControl ItemsSource="{Binding DiagramSource}" HorizontalAlignment="Center">
+        <ItemsControl ItemsSource="{Binding DiagramSource}" 
+                      HorizontalAlignment="Center"
+                      Margin="0,25,0,0">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"
@@ -34,12 +36,34 @@
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0,10,50,0">
-            <ComboBox Width="200" Margin="0,0,20,0"/>
+            <ComboBox
+                x:Name="SortList"
+                SelectedIndex="0"
+                Width="Auto" 
+                Margin="0,0,20,0"
+                ItemsSource="{Binding SortersTypes}"
+                FontSize="18"
+                HorizontalContentAlignment="Center"/>
             <Button Height="30"
                     Width="80"
-                    Content="StartAsync"
+                    Content="Start"
                     Command="{Binding StartSortingCommand}"
-                    HorizontalAlignment="Right"/>
+                    HorizontalAlignment="Right"
+                    Margin="0,0,20,0"
+                    FontSize="16"/>
+            <Button Height="30"
+                    Width="80"
+                    Content="Stop"
+                    Command="{Binding StopSortingCommand}"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,20,0"
+                    FontSize="16"/>
+            <Button Height="30"
+                    Width="80"
+                    Content="Shuffle"
+                    Command="{Binding ShuffleCommand}"
+                    HorizontalAlignment="Right"
+                    FontSize="16"/>
         </StackPanel>
 
     </StackPanel>

@@ -1,15 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using MailSender.lib.Commands;
 using SortsVisualizer.lib.Enums;
 using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
 using SortsVisualizer.lib.Services;
-using SortsVisualizer.UI.Data;
 
 namespace SortsVisualizer.UI.ViewModels;
 
@@ -28,30 +24,64 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     #region Commands
 
+    #region Start
+
     public ICommand StartSortingCommand { get; }
 
     private bool CanStartSortingCommandExecute(object o) => true;
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        var sorter = _sorterService.GetSorter(SortType.Bubble);
-        await sorter.StartAsync(DiagramSource);
+        await SorterService.StartAsync(SortType.Bubble, DiagramSource);
     }
+
+    #endregion
+
+    #region Shuffle
+
+    public ICommand ShuffleCommand { get; }
+
+    private bool CanShuffleCommandExecute(object o) => true;
+
+    private void OnShuffleCommandExecuted(object o)
+    {
+        DiagramItemService.Shuffle();
+    }
+
+    #endregion
+
+    #region Stop
+
+    public ICommand StopSortingCommand { get; }
+
+    private bool CanStopSortingCommandExecute(object o) => true;
+
+    private void OnStopSortingCommandExecuted(object o)
+    {
+        SorterService.Stop();
+    }
+
+    #endregion
 
     #endregion
 
     #region Properties
 
     public ObservableCollection<DiagramItem> DiagramSource { get; set; }
-    private readonly ISorterService _sorterService;
-
+    public ISorterService SorterService { get; }
+    public IDiagramItemService DiagramItemService { get;}
+    public string[] SortersTypes => SorterService.GetSortersTypes();
 
     #endregion
 
     public MainWindowViewModel()
     {
-        DiagramSource = TestData.ObservableCollection;
-        _sorterService = new SorterService(OnCollectionChanged);
+        SorterService = new SorterService(OnCollectionChanged);
+        DiagramItemService = new DiagramItemService();
+        DiagramSource = DiagramItemService.Items;
+
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
+        StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);
+        ShuffleCommand = new LambdaCommand(OnShuffleCommandExecuted, CanShuffleCommandExecute);
     }
 }
