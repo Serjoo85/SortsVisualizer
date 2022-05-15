@@ -28,15 +28,31 @@ public class MainWindowViewModel : INotifyCollectionChanged
 
     #region Commands
 
+    #region Start
+
     public ICommand StartSortingCommand { get; }
 
     private bool CanStartSortingCommandExecute(object o) => true;
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        var sorter = SorterService.GetSorter(SortType.Bubble);
-        await sorter.StartAsync(DiagramSource);
+        await SorterService.StartAsync(SortType.Bubble, DiagramSource);
     }
+
+    #endregion
+
+    #region Stop
+
+    public ICommand StopSortingCommand { get; }
+
+    private bool CanStopSortingCommandExecute(object o) => true;
+
+    private void OnStopSortingCommandExecuted(object o)
+    {
+        SorterService.Stop();
+    }
+
+    #endregion
 
     #endregion
 
@@ -54,5 +70,6 @@ public class MainWindowViewModel : INotifyCollectionChanged
         DiagramSource = TestData.ObservableCollection;
         SorterService = new SorterService(OnCollectionChanged);
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
+        StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);
     }
 }

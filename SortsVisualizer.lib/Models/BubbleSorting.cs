@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using SortsVisualizer.lib.Interfaces;
@@ -42,9 +43,8 @@ public class BubbleSorting : ISorterStrategy
             var hasSwap = false;
             for (int j = 0; j < num - i - 1; j++)
             {
-                cancel.ThrowIfCancellationRequested();
                 // j - индекс текущего элемента.
-
+                
                 // Закрашиваем текущий элемент с перестановкой.
                 if (collection[j].Value > collection[j + 1].Value)
                 {
@@ -52,8 +52,8 @@ public class BubbleSorting : ISorterStrategy
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         if (j > 0)
-                            ChangeColor(collection, j - 1, Colors.White);
-                        ChangeColor(collection, j, Colors.Orange);
+                            ChangeColor(j - 1, Colors.White);
+                        ChangeColor(j, Colors.Orange);
                         (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
                     });
                 }
@@ -63,8 +63,8 @@ public class BubbleSorting : ISorterStrategy
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         if (j > 0)
-                            ChangeColor(collection, j - 1, Colors.White);
-                        ChangeColor(collection, j, Colors.Orange);
+                            ChangeColor(j - 1, Colors.White);
+                        ChangeColor(j, Colors.Orange);
                     });
 
                 }
@@ -74,22 +74,22 @@ public class BubbleSorting : ISorterStrategy
 
             // Красим в белый последний закрашенный прямоугольник.
             Application.Current.Dispatcher.Invoke(() =>
-                ChangeColor(collection, num - i - 2, Colors.White));
+                ChangeColor(num - i - 2, Colors.White));
             _onCollectionChanged(NotifyCollectionChangedAction.Replace);
             // Проход без замены признак отсортированной последовательности.
             if (hasSwap == false) return;
         }
 
-        void ChangeColor(ObservableCollection<DiagramItem> collect, int index, Color color)
+        void ChangeColor(int index, Color color)
         {
-            var newItem = collect[index];
+            var newItem = collection[index];
             newItem.Color = new SolidColorBrush(color);
-            collect[index] = newItem;
+            collection[index] = newItem;
         }
     }
 
     public void Stop()
     {
-        _cts.Cancel();
+        _cts?.Cancel();
     }
 }
