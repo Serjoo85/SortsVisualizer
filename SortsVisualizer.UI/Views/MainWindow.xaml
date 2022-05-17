@@ -6,7 +6,7 @@
         xmlns:vm="clr-namespace:SortsVisualizer.UI.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Height="625" 
+        Height="650" 
         Width="1050">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
@@ -35,16 +35,18 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <DockPanel HorizontalAlignment="Stretch">
-            <Label
-                FontSize="20"
-                Content="{Binding NumberOfStep}"/>
-            <Label
-                FontSize="20"
-                Content="{Binding NumberOfIterations}"/>
+        <DockPanel HorizontalAlignment="Stretch"
+                   Margin="25,10,25,0">
+            <StackPanel Orientation="Vertical">
+                <Label
+                    FontSize="20"
+                    Content="{Binding NumberOfStep}" ContentStringFormat="Steps = {0}"/>
+                <Label
+                    FontSize="20"
+                    Content="{Binding NumberOfIterations}" ContentStringFormat="Iterations = {0}"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        Margin="0,10,25,0">
+                        HorizontalAlignment="Right">
                 <ComboBox
                     x:Name="SortList"
                     SelectedIndex="0"
@@ -53,6 +55,7 @@
                     ItemsSource="{Binding SortersTypes}"
                     SelectedValue="{Binding SelectedSort, Mode=OneWayToSource}"
                     FontSize="18"
+                    Height="30"
                     HorizontalContentAlignment="Center"/>
                 <Button Height="30"
                         Width="80"

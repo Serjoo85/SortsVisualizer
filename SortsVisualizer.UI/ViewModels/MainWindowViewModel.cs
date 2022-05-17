@@ -94,29 +94,29 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     private ProcessStates _state;
     private SortType _selectedSort;
-    private string _numberOfSteps;
-    private string _numberOfIterations;
+    private int _numberOfSteps;
+    private int _numberOfIterations;
 
     #endregion
 
     #region Properties
 
-    public string NumberOfStep
+    public int NumberOfStep
     {
         get => _numberOfSteps;
         set
         {
-            _numberOfSteps = $"Steps = {value}";
+            _numberOfSteps = value;
             OnPropertyChanged();
         }
     }
 
-    public string NumberOfIterations
+    public int NumberOfIterations
     {
         get => _numberOfIterations;
         set
         {
-            _numberOfIterations = $"Iterations = {value}";
+            _numberOfIterations = value;
             OnPropertyChanged();
         }
     }
@@ -142,8 +142,8 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     private void UpdateStatistics(Statistics info)
     {
-        NumberOfStep = info.Steps.ToString();
-        NumberOfIterations = info.Iterations.ToString();
+        NumberOfStep = info.Steps;
+        NumberOfIterations = info.Iterations;
     }
 
     #endregion

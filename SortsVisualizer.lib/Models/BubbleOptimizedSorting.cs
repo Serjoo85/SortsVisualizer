@@ -15,22 +15,22 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
         ObservableCollection<DiagramItem> collection,
         CancellationToken cancel, int delay)
     {
-        info = new Statistics();
+        _info = new Statistics();
         bool hasSwap1 = false;
         bool hasSwap2 = false;
         int elementsCount = collection.Count;
         do
         {
             hasSwap1 = false;
-            for (int i = info.Iterations; i < elementsCount - info.Iterations - 1; i++)
+            for (int i = _info.Iterations; i < elementsCount - _info.Iterations - 1; i++)
             {
                 // Красим предыдущий элемент в белый.
                 if (i > 0 && collection[i - 1].Color.Color != Colors.Green)
                     ColorChanger.Change(i - 1, Colors.White);
                 // Красим текущий в оранжевый.
                 ColorChanger.Change(i, Colors.Orange);
-                info.Steps++;
-                OnStatisticsChanged(info);
+                _info.Steps++;
+                OnStatisticsChanged(_info);
                 ColorChanger.ReplacementNotify();
 
 
@@ -47,13 +47,13 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
             }
 
             // Красим зелёным последний отсортированный элемент.
-            ColorChanger.Change(elementsCount - info.Iterations - 1, Colors.Green);
+            ColorChanger.Change(elementsCount - _info.Iterations - 1, Colors.Green);
             ColorChanger.ReplacementNotify();
 
             if (!hasSwap1) return;
 
             hasSwap2 = false;
-            for (int i = elementsCount - info.Iterations - 1; i > info.Iterations; i--)
+            for (int i = elementsCount - _info.Iterations - 1; i > _info.Iterations; i--)
             {
                 if (i < elementsCount - 1)
                 {
@@ -62,11 +62,11 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
                 }
 
                 // Красим текущий элемент в оранжевый если он не крайний отсортированный.
-                if (i != elementsCount - info.Iterations - 1)
+                if (i != elementsCount - _info.Iterations - 1)
                 {
                     ColorChanger.Change(i, Colors.Orange);
-                    info.Steps++;
-                    OnStatisticsChanged(info);
+                    _info.Steps++;
+                    OnStatisticsChanged(_info);
                 }
 
                 ColorChanger.ReplacementNotify();
@@ -84,14 +84,14 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
             }
 
             // Красим зелёным последний отсортированный элемент.
-            ColorChanger.Change(info.Iterations, Colors.Green);
+            ColorChanger.Change(_info.Iterations, Colors.Green);
             ColorChanger.ReplacementNotify();
 
             if (!hasSwap2) return;
 
-            info.Iterations++;
-            OnStatisticsChanged(info);
-        } while (info.Iterations < elementsCount);
+            _info.Iterations++;
+            OnStatisticsChanged(_info);
+        } while (_info.Iterations < elementsCount);
     }
 
     public void Stop()

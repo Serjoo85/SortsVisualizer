@@ -9,7 +9,7 @@ public abstract class BaseSorting
     protected CancellationTokenSource Cts = null!;
     protected IColorChanger ColorChanger;
     protected event Action<Statistics> StatisticsChanged;
-    protected Statistics info;
+    protected Statistics _info = null!;
 
     protected BaseSorting(IColorChanger colorChanger, Action<Statistics> updateStatistics)
     {
@@ -17,7 +17,10 @@ public abstract class BaseSorting
         ColorChanger = colorChanger;
     }
 
-    protected void OnStatisticsChanged(Statistics info) => StatisticsChanged.Invoke(info);
+    protected void OnStatisticsChanged(Statistics info)
+    {
+        StatisticsChanged.Invoke(info);
+    }
 
     public async Task StartAsync(ObservableCollection<DiagramItem> collection,int delay)
     {
