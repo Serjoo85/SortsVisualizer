@@ -13,8 +13,10 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
 
     protected override async Task SortAsync(
         ObservableCollection<DiagramItem> collection,
-        CancellationToken cancel, int delay = 100)
+        CancellationToken cancel, Action<int> action, int delay = 100)
     {
+        Action = action;
+        StepCount = 0;
         int num = collection.Count;
         for (int i = 0; i < num - 1; i++)
         {
@@ -29,13 +31,15 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                     hasSwap = true;
 
                     if (j > 0)
-                        ColorChanger.Change(j - 1, Colors.White, collection);
-                    ColorChanger.Change(j, Colors.Orange, collection);
-                    ColorChanger.ReplacementNotify(); ;
-                    await Task.Delay(delay - 10, cancel);
+                        ColorChanger.Change(j - 1, Colors.White);
+                    ColorChanger.Change(j, Colors.Orange);
+                    ColorChanger.ReplacementNotify();
+                    StepCount++;
+                    await Task.Delay(delay, cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
-                    ColorChanger.ReplacementNotify(); ;
-                    await Task.Delay(delay - 10, cancel);
+                    ColorChanger.ReplacementNotify();
+                    // При перестановки получается перемещение, должна быть задержка.
+                    await Task.Delay(delay, cancel);
 
                 }
                 // Закрашиваем текущий элемент без перестановки.
@@ -43,16 +47,17 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                 {
 
                     if (j > 0)
-                        ColorChanger.Change(j - 1, Colors.White, collection);
-                    ColorChanger.Change(j, Colors.Orange, collection);
+                        ColorChanger.Change(j - 1, Colors.White);
+                    ColorChanger.Change(j, Colors.Orange);
+                    StepCount++;
                     ColorChanger.ReplacementNotify(); ;
                     await Task.Delay(delay, cancel);
                 }
             }
 
             // Красим в белый последний закрашенный прямоугольник.
-            ColorChanger.Change(num - i - 1, Colors.Green, collection);
-            ColorChanger.Change(num - i - 2, Colors.White, collection);
+            ColorChanger.Change(num - i - 1, Colors.Green);
+            ColorChanger.Change(num - i - 2, Colors.White);
 
             ColorChanger.ReplacementNotify(); ;
             // Проход без замены признак отсортированной последовательности.

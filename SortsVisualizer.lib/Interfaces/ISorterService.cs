@@ -6,7 +6,7 @@ namespace SortsVisualizer.lib.Interfaces;
 
 public interface ISorterService
 {
-    public Task StartAsync(SortType type, ObservableCollection<DiagramItem> collection);
+    public Task StartAsync(SortType type, Action<int> action);
     public void Stop();
     public string[] GetSortersTypes();
 }

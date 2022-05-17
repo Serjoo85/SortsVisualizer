@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Input;
 using SortsVisualizer.lib.Commands;
 using SortsVisualizer.lib.Enums;
@@ -24,6 +25,18 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     #endregion
 
+    #region IPropertyChanged
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
+
     #region Commands
 
     #region Start
@@ -37,7 +50,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     private async void OnStartSortingCommandExecuted(object o)
     {
         _state = ProcessStates.Sorting;
-        await SorterService.StartAsync(SelectedSort, DiagramSource);
+        await SorterService.StartAsync(SelectedSort, CountSteps);
         _state = ProcessStates.NothingToDo;
         RaiseCanExecuteChanged();
     }
@@ -54,7 +67,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     private void OnShuffleCommandExecuted(object o)
     {
         _state = ProcessStates.Shuffling;
-        DiagramItemService.Shuffle();
+        DiagramSourceService.Shuffle();
         _state = ProcessStates.NothingToDo;
     }
 
@@ -80,14 +93,25 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     private ProcessStates _state;
     private SortType _selectedSort;
+    private int _numberOfStep;
 
     #endregion
 
     #region Properties
 
+    public int NumberOfStep
+    {
+        get => _numberOfStep;
+        set
+        {
+            _numberOfStep = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ObservableCollection<DiagramItem> DiagramSource { get; set; }
     public ISorterService SorterService { get; }
-    public IDiagramItemService DiagramItemService { get;}
+    public IDiagramSourceService DiagramSourceService { get;}
     public string[] SortersTypes => SorterService.GetSortersTypes();
 
     public SortType SelectedSort
@@ -102,24 +126,27 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     #endregion
 
+    #region Methods
+
+    private void CountSteps(int quantity)
+    {
+        NumberOfStep = quantity;
+    }
+
+    #endregion
+
     public MainWindowViewModel()
     {
         _state = ProcessStates.NothingToDo;
 
-        DiagramItemService = new DiagramItemService(OnCollectionChanged);
-        DiagramSource = DiagramItemService.Items;
-        SorterService = new SorterService(DiagramItemService);
+        DiagramSourceService = new DiagramSourcesService(OnCollectionChanged);
+        DiagramSource = DiagramSourceService.Items;
+        SorterService = new SorterService(DiagramSourceService, DiagramSource);
 
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
         StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);
         ShuffleCommand = new LambdaCommand(OnShuffleCommandExecuted, CanShuffleCommandExecute);
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
 
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

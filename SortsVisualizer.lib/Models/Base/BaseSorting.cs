@@ -9,19 +9,34 @@ public abstract class BaseSorting
     protected CancellationTokenSource Cts = null!;
     protected IColorChanger ColorChanger;
 
+    public event Action<object> StatisticsChanged;
+
+    protected Action<int> Action;
+    protected int _stepCount;
+
+    protected int StepCount
+    {
+        get => _stepCount;
+        set
+        {
+            _stepCount = value;
+            Action?.Invoke(_stepCount);
+        }
+    }
+
     protected BaseSorting(IColorChanger colorChanger)
     {
         ColorChanger = colorChanger;
     }
 
-    public async Task StartAsync(ObservableCollection<DiagramItem> collection)
+    public async Task StartAsync(ObservableCollection<DiagramItem> collection, Action<int> action)
     {
         Cts = new CancellationTokenSource();
         try
         {
-            await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.White);
-            await SortAsync(collection, Cts.Token, 80);
-            await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.Green);
+            await ColorChanger.FillAllWithAnimation(CancellationToken.None, Colors.White);
+            await SortAsync(collection, Cts.Token, action, 80);
+            await ColorChanger.FillAllWithAnimation(CancellationToken.None, Colors.Green);
         }
         catch (OperationCanceledException e)
         {
@@ -31,10 +46,10 @@ public abstract class BaseSorting
         {
             Cts.Dispose();
             Cts = new CancellationTokenSource();
-            await ColorChanger.FillAllWithAnimation(collection, CancellationToken.None, Colors.White);
+            await ColorChanger.FillAllWithAnimation(CancellationToken.None, Colors.White);
         }
     }
 
-    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, int delay = 100);
+    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Action<int> action, int delay = 100);
 
 }

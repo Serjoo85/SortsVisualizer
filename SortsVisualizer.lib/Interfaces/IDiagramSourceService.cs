@@ -3,7 +3,7 @@ using SortsVisualizer.lib.Models;
 
 namespace SortsVisualizer.lib.Interfaces;
 
-public interface IDiagramItemService : IColorChanger
+public interface IDiagramSourceService : IColorChanger
 {
     public ObservableCollection<DiagramItem> Items { get; }
     public  void Shuffle();

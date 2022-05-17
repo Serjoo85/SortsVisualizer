@@ -7,11 +7,14 @@ namespace SortsVisualizer.lib.Services;
 
 public class SorterService : ISorterService
 {
+    private readonly ObservableCollection<DiagramItem> _collection;
     private readonly Dictionary<SortType, ISorterStrategy> _sorters;
     private ISorterStrategy _startedStrategy = null!;
+    private TimeSpan _time;
 
-    public SorterService(IColorChanger colorChanger)
+    public SorterService(IColorChanger colorChanger, ObservableCollection<DiagramItem> collection)
     {
+        _collection = collection;
         _sorters = new()
         {
             { SortType.Bubble, new BubbleSorting(colorChanger) },
@@ -23,15 +26,14 @@ public class SorterService : ISorterService
     /// Возвращает сортировку заданного типа
     /// </summary>
     /// <param name="type">Тип сортировки</param>
-    /// <param name="collection">Сортируемая коллекция</param>
+    /// <param name="action">Обратный вызов</param>
     /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public async Task StartAsync(SortType type, ObservableCollection<DiagramItem> collection)
+    public async Task StartAsync(SortType type, Action<int> action)
     {
         if (!_sorters.ContainsKey(type))
             throw new ArgumentException(nameof(type));
         _startedStrategy = _sorters[type];
-        await _startedStrategy.StartAsync(collection);
+        await _startedStrategy.StartAsync(_collection, action);
     }
 
     public void Stop()
