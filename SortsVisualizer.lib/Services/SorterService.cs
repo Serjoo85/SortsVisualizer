@@ -7,18 +7,15 @@ namespace SortsVisualizer.lib.Services;
 
 public class SorterService : ISorterService
 {
-    private readonly ObservableCollection<DiagramItem> _collection;
     private readonly Dictionary<SortType, ISorterStrategy> _sorters;
     private ISorterStrategy _startedStrategy = null!;
-    private TimeSpan _time;
 
-    public SorterService(IColorChanger colorChanger, ObservableCollection<DiagramItem> collection)
+    public SorterService(IColorChanger colorChanger, Action<Statistics> updateStatistics)
     {
-        _collection = collection;
         _sorters = new()
         {
-            { SortType.Bubble, new BubbleSorting(colorChanger) },
-            { SortType.OptimizedBubble, new BubbleOptimizedSorting(colorChanger) },
+            { SortType.Bubble, new BubbleSorting(colorChanger, updateStatistics)},
+            { SortType.OptimizedBubble, new BubbleOptimizedSorting(colorChanger, updateStatistics) },
         };
     }
 
@@ -27,13 +24,15 @@ public class SorterService : ISorterService
     /// </summary>
     /// <param name="type">Тип сортировки</param>
     /// <param name="action">Обратный вызов</param>
+    /// <param name="collection"></param>
+    /// <param name="delay"></param>
     /// <returns></returns>
-    public async Task StartAsync(SortType type, Action<int> action)
+    public async Task StartAsync(SortType type, ObservableCollection<DiagramItem> collection, int delay = 80)
     {
         if (!_sorters.ContainsKey(type))
             throw new ArgumentException(nameof(type));
         _startedStrategy = _sorters[type];
-        await _startedStrategy.StartAsync(_collection, action);
+        await _startedStrategy.StartAsync(collection, delay);
     }
 
     public void Stop()

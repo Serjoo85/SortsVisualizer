@@ -1,8 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Windows.Input;
 using SortsVisualizer.lib.Commands;
 using SortsVisualizer.lib.Enums;
@@ -50,7 +51,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     private async void OnStartSortingCommandExecuted(object o)
     {
         _state = ProcessStates.Sorting;
-        await SorterService.StartAsync(SelectedSort, CountSteps);
+        await SorterService.StartAsync(SelectedSort, DiagramSource, 80);
         _state = ProcessStates.NothingToDo;
         RaiseCanExecuteChanged();
     }
@@ -93,18 +94,29 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     private ProcessStates _state;
     private SortType _selectedSort;
-    private int _numberOfStep;
+    private string _numberOfSteps;
+    private string _numberOfIterations;
 
     #endregion
 
     #region Properties
 
-    public int NumberOfStep
+    public string NumberOfStep
     {
-        get => _numberOfStep;
+        get => _numberOfSteps;
         set
         {
-            _numberOfStep = value;
+            _numberOfSteps = $"Steps = {value}";
+            OnPropertyChanged();
+        }
+    }
+
+    public string NumberOfIterations
+    {
+        get => _numberOfIterations;
+        set
+        {
+            _numberOfIterations = $"Iterations = {value}";
             OnPropertyChanged();
         }
     }
@@ -128,9 +140,10 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     #region Methods
 
-    private void CountSteps(int quantity)
+    private void UpdateStatistics(Statistics info)
     {
-        NumberOfStep = quantity;
+        NumberOfStep = info.Steps.ToString();
+        NumberOfIterations = info.Iterations.ToString();
     }
 
     #endregion
@@ -141,7 +154,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
         DiagramSourceService = new DiagramSourcesService(OnCollectionChanged);
         DiagramSource = DiagramSourceService.Items;
-        SorterService = new SorterService(DiagramSourceService, DiagramSource);
+        SorterService = new SorterService(DiagramSourceService, UpdateStatistics);
 
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
         StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);

@@ -7,16 +7,16 @@ namespace SortsVisualizer.lib.Models;
 
 public class BubbleSorting : BaseSorting, ISorterStrategy
 {
-    public BubbleSorting(IColorChanger colorChanger) : base(colorChanger)
+    public BubbleSorting(IColorChanger colorChanger, Action<Statistics> updateStatistics) : base(colorChanger, updateStatistics)
     {
     }
 
     protected override async Task SortAsync(
         ObservableCollection<DiagramItem> collection,
-        CancellationToken cancel, Action<int> action, int delay = 100)
+        CancellationToken cancel, int delay)
     {
-        Action = action;
-        StepCount = 0;
+        info = new Statistics();
+
         int num = collection.Count;
         for (int i = 0; i < num - 1; i++)
         {
@@ -34,7 +34,10 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                         ColorChanger.Change(j - 1, Colors.White);
                     ColorChanger.Change(j, Colors.Orange);
                     ColorChanger.ReplacementNotify();
-                    StepCount++;
+
+                    info.Steps++;
+                    OnStatisticsChanged(info);
+
                     await Task.Delay(delay, cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
                     ColorChanger.ReplacementNotify();
@@ -45,21 +48,28 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                 // Закрашиваем текущий элемент без перестановки.
                 else
                 {
-
                     if (j > 0)
                         ColorChanger.Change(j - 1, Colors.White);
                     ColorChanger.Change(j, Colors.Orange);
-                    StepCount++;
                     ColorChanger.ReplacementNotify(); ;
+
+                    info.Steps++;
+                    OnStatisticsChanged(info);
                     await Task.Delay(delay, cancel);
                 }
             }
 
-            // Красим в белый последний закрашенный прямоугольник.
+            // Отмечаем зелёным последний элемент как отсортированный.
             ColorChanger.Change(num - i - 1, Colors.Green);
+            /*  Красим в белый предпоследний прямоугольник иначе
+                на последней итерации будет оранжевая полоса.
+                TODO Нужно оптимизировать.
+            */
             ColorChanger.Change(num - i - 2, Colors.White);
-
             ColorChanger.ReplacementNotify(); ;
+
+            info.Iterations++;
+            OnStatisticsChanged(info);
             // Проход без замены признак отсортированной последовательности.
             if (hasSwap == false)
             {

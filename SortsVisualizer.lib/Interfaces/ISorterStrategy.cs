@@ -5,6 +5,6 @@ namespace SortsVisualizer.lib.Interfaces;
 
 public interface ISorterStrategy
 {
-    Task StartAsync(ObservableCollection<DiagramItem> collection, Action<int> action);
+    Task StartAsync(ObservableCollection<DiagramItem> collection, int delay);
     void Stop();
 }

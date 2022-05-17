@@ -38,8 +38,10 @@
         <DockPanel HorizontalAlignment="Stretch">
             <Label
                 FontSize="20"
-                Content="{Binding NumberOfStep}"
-            />
+                Content="{Binding NumberOfStep}"/>
+            <Label
+                FontSize="20"
+                Content="{Binding NumberOfIterations}"/>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         Margin="0,10,25,0">
