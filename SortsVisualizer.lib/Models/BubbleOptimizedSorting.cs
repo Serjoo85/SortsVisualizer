@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Media;
+using System.Drawing;
 using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models.Base;
 

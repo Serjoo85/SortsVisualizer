@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.Windows.Media;
 using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
+using Color = System.Windows.Media;
 
 namespace SortsVisualizer.lib.Services;
 
@@ -66,16 +67,21 @@ public class DiagramSourcesService : IDiagramSourceService
     #region IColorChanger
     public void Change(
         int index,
-        Color color)
+        System.Windows.Media.Color color)
     {
         var newItem = Items[index];
         newItem.Color = new SolidColorBrush(color);
         Items[index] = newItem;
     }
 
+    Task IColorChanger.FillAllWithAnimation(CancellationToken cancel, System.Windows.Media.Color color, int delay)
+    {
+        return FillAllWithAnimation(cancel, color, delay);
+    }
+
     public async Task FillAllWithAnimation(
         CancellationToken cancel,
-        Color color,
+        System.Windows.Media.Color color,
         int delay = 50)
     {
         var x = Thread.CurrentThread.ManagedThreadId;
@@ -90,6 +96,7 @@ public class DiagramSourcesService : IDiagramSourceService
         }
     }
     #endregion
+    
 
     public void ReplacementNotify()
     {

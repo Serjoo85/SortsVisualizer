@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Media;
 using SortsVisualizer.lib.Interfaces;
 
 namespace SortsVisualizer.lib.Models.Base;
@@ -27,9 +26,9 @@ public abstract class BaseSorting
         Cts = new CancellationTokenSource();
         try
         {
-            await ColorChanger.FillAllWithAnimation(CancellationToken.None, Colors.White);
+            await ColorChanger.FillAllWithAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
             await SortAsync(collection, Cts.Token,delay);
-            await ColorChanger.FillAllWithAnimation(CancellationToken.None, Colors.Green);
+            await ColorChanger.FillAllWithAnimation(CancellationToken.None, System.Windows.Media.Colors.Green);
         }
         catch (OperationCanceledException e)
         {
@@ -39,7 +38,7 @@ public abstract class BaseSorting
         {
             Cts.Dispose();
             Cts = new CancellationTokenSource();
-            await ColorChanger.FillAllWithAnimation(CancellationToken.None, Colors.White);
+            await ColorChanger.FillAllWithAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
         }
     }
 

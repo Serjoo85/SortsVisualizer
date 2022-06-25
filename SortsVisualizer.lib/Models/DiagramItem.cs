@@ -3,7 +3,7 @@
 namespace SortsVisualizer.lib.Models;
 
 /// <summary>
-/// Элемент диаграммы
+/// Элемент диаграммы (Столбик)
 /// </summary>
 /// <remarks>
 /// В случае использования класса, при изменении свойства Color
