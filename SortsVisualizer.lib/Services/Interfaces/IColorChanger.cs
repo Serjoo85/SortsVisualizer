@@ -9,7 +9,7 @@ public interface IColorChanger
     /// </summary>
     /// <param name="index">Индекс элемента</param>
     /// <param name="color">Новый цвет</param>
-    public void Change(int index, Color color);
+    public void FillSingleRectangle(int index, Color color);
 
     /// <summary>
     /// Анимация заливки выбранным цветом всех не закрашенных этим цветом элементов.
@@ -18,11 +18,5 @@ public interface IColorChanger
     /// <param name="color"></param>
     /// <param name="delay">Задержка отрисовки цвета</param>
     /// <returns></returns>
-    public Task FillAllWithAnimation(CancellationToken cancel, Color color, int delay = 50);
-
-    /// <summary>
-    /// Уведомляет об изменении списка элементов.
-    /// </summary>
-    public void ReplacementNotify();
-
+    public Task MakeLadderAnimation(CancellationToken cancel, Color color, int delay = 50);
 }

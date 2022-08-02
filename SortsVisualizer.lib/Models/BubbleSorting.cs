@@ -3,12 +3,13 @@ using System.Windows.Media;
 using SortsVisualizer.lib.Models.Base;
 using SortsVisualizer.lib.Models.Interfaces;
 using SortsVisualizer.lib.Services.Interfaces;
+using SortsVisualizer.lib.Services.SubModules;
 
 namespace SortsVisualizer.lib.Models;
 
 public class BubbleSorting : BaseSorting, ISorterStrategy
 {
-    public BubbleSorting(IColorChanger colorChanger, Action<Statistics> updateStatistics) : base(colorChanger, updateStatistics)
+    public BubbleSorting(IDiagramSourceService diagramService, Action<Statistics> updateStatistics) : base(diagramService, updateStatistics)
     {
     }
 
@@ -32,16 +33,16 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                     hasSwap = true;
 
                     if (j > 0)
-                        ColorChanger.Change(j - 1, Colors.White);
-                    ColorChanger.Change(j, Colors.Orange);
-                    ColorChanger.ReplacementNotify();
+                        DiagramService.ColorChanger.Change(j - 1, Colors.White);
+                    DiagramService.ColorChanger.Change(j, Colors.Orange);
+                    DiagramService.CollectionNotify();
 
                     _info.Steps++;
                     OnStatisticsChanged(_info);
 
                     await Task.Delay(delay, cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
-                    ColorChanger.ReplacementNotify();
+                    DiagramService.CollectionNotify();
                     // При перестановки получается перемещение, должна быть задержка.
                     await Task.Delay(delay, cancel);
 
@@ -50,9 +51,9 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                 else
                 {
                     if (j > 0)
-                        ColorChanger.Change(j - 1, Colors.White);
-                    ColorChanger.Change(j, Colors.Orange);
-                    ColorChanger.ReplacementNotify(); ;
+                        DiagramService.ColorChanger.Change(j - 1, Colors.White);
+                    DiagramService.ColorChanger.Change(j, Colors.Orange);
+                    DiagramService.CollectionNotify();
 
                     _info.Steps++;
                     OnStatisticsChanged(_info);
@@ -61,13 +62,13 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
             }
 
             // Отмечаем зелёным последний элемент как отсортированный.
-            ColorChanger.Change(num - i - 1, Colors.Green);
+            DiagramService.ColorChanger.Change(num - i - 1, Colors.Green);
             /*  Красим в белый предпоследний прямоугольник иначе
                 на последней итерации будет оранжевая полоса.
                 TODO Нужно оптимизировать.
             */
-            ColorChanger.Change(num - i - 2, Colors.White);
-            ColorChanger.ReplacementNotify(); ;
+            DiagramService.ColorChanger.Change(num - i - 2, Colors.White);
+            DiagramService.CollectionNotify(); ;
 
             _info.Iterations++;
             OnStatisticsChanged(_info);

@@ -11,12 +11,12 @@ public class SorterService : ISorterService
     private readonly Dictionary<SortType, ISorterStrategy> _sorters;
     private ISorterStrategy _startedStrategy = null!;
 
-    public SorterService(IColorChanger colorChanger, Action<Statistics> updateStatistics)
+    public SorterService(IDiagramSourceService diagramService, Action<Statistics> updateStatistics)
     {
         _sorters = new()
         {
-            { SortType.Bubble, new BubbleSorting(colorChanger, updateStatistics)},
-            { SortType.OptimizedBubble, new BubbleOptimizedSorting(colorChanger, updateStatistics) },
+            { SortType.Bubble, new BubbleSorting(diagramService, updateStatistics)},
+            { SortType.OptimizedBubble, new BubbleOptimizedSorting(diagramService, updateStatistics) },
         };
     }
 

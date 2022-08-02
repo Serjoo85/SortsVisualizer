@@ -1,10 +1,15 @@
 ﻿using System.Collections.ObjectModel;
 using SortsVisualizer.lib.Models;
+using SortsVisualizer.lib.Services.SubModules;
 
 namespace SortsVisualizer.lib.Services.Interfaces;
 
-public interface IDiagramSourceService : IColorChanger
+public interface IDiagramSourceService
 {
     public ObservableCollection<DiagramItem> Items { get; }
     public void Shuffle();
+
+    public ColorChanger ColorChanger { get; }
+
+    public void CollectionNotify();
 }

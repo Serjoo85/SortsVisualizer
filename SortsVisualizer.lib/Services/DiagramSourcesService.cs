@@ -1,52 +1,33 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Windows.Media;
 using SortsVisualizer.lib.Models;
 using SortsVisualizer.lib.Services.Interfaces;
+using SortsVisualizer.lib.Services.SubModules;
 
 namespace SortsVisualizer.lib.Services;
 
 public class DiagramSourcesService : IDiagramSourceService
 {
-    private readonly int _heightFactor;
-    private readonly int _width;
-    private readonly int _elementsCount;
-    private ObservableCollection<DiagramItem> _items = null!;
-    public ObservableCollection<DiagramItem> Items => _items ??= GetCollection(_elementsCount);
-    private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
+
     private static readonly Random Rnd = new Random();
+    private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
+    public ColorChanger ColorChanger { get; }
+    public ObservableCollection<DiagramItem> Items { get; }
 
     public DiagramSourcesService(Action<NotifyCollectionChangedAction> onCollectionChanged, int elementsCount = 20, int heightFactor = 25, int width = 50)
     {
-        _heightFactor = heightFactor;
-        _width = width;
-
-        _elementsCount = elementsCount;
         _onCollectionChanged = onCollectionChanged;
-    }
-
-    private ObservableCollection<DiagramItem> GetCollection(int count)
-    {
-        var items = new ObservableCollection<DiagramItem>();
-        for (int i = 1; i < count + 1; i++)
-            items.Add(new DiagramItem
-            {
-                Value = i,
-                Height = i * _heightFactor,
-                Width = _width,
-                Color = Brushes.White,
-            });
-
-        MixCollection(items);
-        return items;
+        Items = CollectionCreator.GetCollection(elementsCount, heightFactor, width);
+        MixCollection(Items);
+        ColorChanger = new ColorChanger(Items, _onCollectionChanged);
     }
 
     public void Shuffle()
     {
-        MixCollection(_items);
+        MixCollection(Items);
     }
 
-    private void MixCollection(ObservableCollection<DiagramItem> items)
+    private void MixCollection(Collection<DiagramItem> items)
     {
         for (int i = 0; i < 2; i++)
             for (int j = 0; j < 20 - 3; j++)
@@ -63,41 +44,8 @@ public class DiagramSourcesService : IDiagramSourceService
             }
     }
 
-    #region IColorChanger
-    public void Change(
-        int index,
-        System.Windows.Media.Color color)
-    {
-        var newItem = Items[index];
-        newItem.Color = new SolidColorBrush(color);
-        Items[index] = newItem;
-    }
 
-    Task IColorChanger.FillAllWithAnimation(CancellationToken cancel, System.Windows.Media.Color color, int delay)
-    {
-        return FillAllWithAnimation(cancel, color, delay);
-    }
-
-    public async Task FillAllWithAnimation(
-        CancellationToken cancel,
-        System.Windows.Media.Color color,
-        int delay = 50)
-    {
-        var x = Thread.CurrentThread.ManagedThreadId;
-
-        for (int i = 0; i < Items.Count; i++)
-        {
-            if (Items[i].Color.Color == color)
-                continue;
-            Change(i, color);
-            await Task.Delay(delay, cancel);
-            _onCollectionChanged(NotifyCollectionChangedAction.Replace);
-        }
-    }
-    #endregion
-    
-
-    public void ReplacementNotify()
+    public void CollectionNotify()
     {
         _onCollectionChanged.Invoke(NotifyCollectionChangedAction.Replace);
     }

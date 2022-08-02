@@ -6,14 +6,14 @@ namespace SortsVisualizer.lib.Models.Base;
 public abstract class BaseSorting
 {
     protected CancellationTokenSource Cts = null!;
-    protected IColorChanger ColorChanger;
+    protected IDiagramSourceService DiagramService;
     protected event Action<Statistics> StatisticsChanged;
     protected Statistics _info = null!;
 
-    protected BaseSorting(IColorChanger colorChanger, Action<Statistics> statisticUpdater)
+    protected BaseSorting(IDiagramSourceService diagramService, Action<Statistics> statisticUpdater)
     {
         StatisticsChanged += statisticUpdater;
-        ColorChanger = colorChanger;
+        DiagramService = diagramService;
     }
 
     protected void OnStatisticsChanged(Statistics info)
@@ -26,9 +26,9 @@ public abstract class BaseSorting
         Cts = new CancellationTokenSource();
         try
         {
-            await ColorChanger.FillAllWithAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
+            await DiagramService.ColorChanger.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
             await SortAsync(collection, Cts.Token,delay);
-            await ColorChanger.FillAllWithAnimation(CancellationToken.None, System.Windows.Media.Colors.Green);
+            await DiagramService.ColorChanger.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.Green);
         }
         catch (OperationCanceledException e)
         {
@@ -38,7 +38,7 @@ public abstract class BaseSorting
         {
             Cts.Dispose();
             Cts = new CancellationTokenSource();
-            await ColorChanger.FillAllWithAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
+            await DiagramService.ColorChanger.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
         }
     }
 
