@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using SortsVisualizer.lib.Interfaces;
+using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Models.Base;
 
@@ -10,9 +10,9 @@ public abstract class BaseSorting
     protected event Action<Statistics> StatisticsChanged;
     protected Statistics _info = null!;
 
-    protected BaseSorting(IColorChanger colorChanger, Action<Statistics> updateStatistics)
+    protected BaseSorting(IColorChanger colorChanger, Action<Statistics> statisticUpdater)
     {
-        StatisticsChanged += updateStatistics;
+        StatisticsChanged += statisticUpdater;
         ColorChanger = colorChanger;
     }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using SortsVisualizer.lib.Models;
 
-namespace SortsVisualizer.lib.Interfaces;
+namespace SortsVisualizer.lib.Models.Interfaces;
 
 public interface ISorterStrategy
 {

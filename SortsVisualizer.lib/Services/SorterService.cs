@@ -1,7 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using SortsVisualizer.lib.Enums;
-using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
+using SortsVisualizer.lib.Models.Interfaces;
+using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Services;
 

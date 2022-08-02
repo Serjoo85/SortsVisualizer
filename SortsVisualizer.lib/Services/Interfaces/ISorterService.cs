@@ -2,7 +2,7 @@
 using SortsVisualizer.lib.Enums;
 using SortsVisualizer.lib.Models;
 
-namespace SortsVisualizer.lib.Interfaces;
+namespace SortsVisualizer.lib.Services.Interfaces;
 
 public interface ISorterService
 {

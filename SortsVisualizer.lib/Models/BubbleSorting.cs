@@ -1,7 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Media;
-using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models.Base;
+using SortsVisualizer.lib.Models.Interfaces;
+using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Models;
 

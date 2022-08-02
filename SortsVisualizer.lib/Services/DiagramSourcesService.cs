@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Media;
-using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
-using Color = System.Windows.Media;
+using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Services;
 

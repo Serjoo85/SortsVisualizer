@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using SortsVisualizer.lib.Commands;
 using SortsVisualizer.lib.Enums;
-using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models;
 using SortsVisualizer.lib.Services;
+using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.UI.ViewModels;
 

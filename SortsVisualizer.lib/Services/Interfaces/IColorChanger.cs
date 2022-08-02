@@ -1,8 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Media;
-using SortsVisualizer.lib.Models;
+﻿using System.Windows.Media;
 
-namespace SortsVisualizer.lib.Interfaces;
+namespace SortsVisualizer.lib.Services.Interfaces;
 
 public interface IColorChanger
 {

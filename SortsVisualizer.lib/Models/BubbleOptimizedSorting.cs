@@ -1,14 +1,15 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Media;
 using System.Drawing;
-using SortsVisualizer.lib.Interfaces;
 using SortsVisualizer.lib.Models.Base;
+using SortsVisualizer.lib.Models.Interfaces;
+using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Models;
 
 public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
 {
-    public BubbleOptimizedSorting(IColorChanger colorChanger, Action<Statistics> updateStatistics) : base(colorChanger, updateStatistics)
+    public BubbleOptimizedSorting(IColorChanger colorChanger, Action<Statistics> statisticUpdater) : base(colorChanger, statisticUpdater)
     {
     }
 
