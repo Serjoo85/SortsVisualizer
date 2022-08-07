@@ -5,11 +5,11 @@ using SortsVisualizer.lib.Models.Base;
 using SortsVisualizer.lib.Models.Interfaces;
 using SortsVisualizer.lib.Services.Interfaces;
 
-namespace SortsVisualizer.lib.Models;
+namespace SortsVisualizer.lib.Models.Sorts;
 
 public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
 {
-    public BubbleOptimizedSorting(IDiagramSourceService  colorChanger, Action<Statistics> statisticUpdater) : base(colorChanger, statisticUpdater)
+    public BubbleOptimizedSorting(IDiagramSourceService colorChanger, Action<Statistics> statisticUpdater) : base(colorChanger, statisticUpdater)
     {
     }
 
@@ -49,7 +49,7 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
             }
 
             // Красим зелёным последний отсортированный элемент.
-            DiagramService.ColorChanger.Change( elementsCount - _info.Iterations - 1, Colors.Green);
+            DiagramService.ColorChanger.Change(elementsCount - _info.Iterations - 1, Colors.Green);
             DiagramService.CollectionNotify();
 
             if (!hasSwap1) return;

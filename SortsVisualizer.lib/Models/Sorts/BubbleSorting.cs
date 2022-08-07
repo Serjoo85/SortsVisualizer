@@ -3,9 +3,8 @@ using System.Windows.Media;
 using SortsVisualizer.lib.Models.Base;
 using SortsVisualizer.lib.Models.Interfaces;
 using SortsVisualizer.lib.Services.Interfaces;
-using SortsVisualizer.lib.Services.SubModules;
 
-namespace SortsVisualizer.lib.Models;
+namespace SortsVisualizer.lib.Models.Sorts;
 
 public class BubbleSorting : BaseSorting, ISorterStrategy
 {
