@@ -16,7 +16,7 @@ public class SorterService : ISorterService
         _sorters = new()
         {
             { SortType.Bubble, new Bubble(diagramService, updateStatistics)},
-            { SortType.OptimizedBubble, new Shaker(diagramService, updateStatistics) },
+            { SortType.Shaker, new Shaker(diagramService, updateStatistics) },
             { SortType.Insertion, new Insertion(diagramService, updateStatistics) },
         };
     }

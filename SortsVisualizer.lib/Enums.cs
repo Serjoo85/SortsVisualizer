@@ -3,7 +3,7 @@
 public enum SortType
 {
     Bubble,
-    OptimizedBubble,
+    Shaker,
     Insertion,
 }
 

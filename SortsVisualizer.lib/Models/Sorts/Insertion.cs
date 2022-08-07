@@ -22,28 +22,31 @@ namespace SortsVisualizer.lib.Models.Sorts
         CancellationToken cancel,
         int delay)
         {
-            _info = new Statistics();
             int j;
             int x;
+            DiagramService.Color.Change(0, Colors.Green);
             for (int i = 1; i < collection.Count; i++)
             {
                 x = collection[i].Value;
                 j = i;
                 while (j > 0 && collection[j - 1].Value > x)
                 {
-                    (collection[j], collection[j - 1]) = (collection[j - 1], collection[j]);
-                    j -= 1;
+                    DiagramService.Color.Change(j, Colors.Orange);
                     DiagramService.CollectionNotify();
                     await Task.Delay(500, cancel);
-                    _info.Steps++;
-                    OnStatisticsChanged(_info);
+                    (collection[j], collection[j - 1]) = (collection[j - 1], collection[j]);
+                    await Task.Delay(500, cancel);
+                    DiagramService.CollectionNotify();
+                    Info.Steps++;
+                    j -= 1;
                 }
+                DiagramService.Color.Change(j, Colors.Green);
             }
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            Cts.Cancel();
         }
     }
 }
