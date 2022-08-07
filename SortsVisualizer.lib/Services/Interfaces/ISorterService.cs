@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using SortsVisualizer.lib.Enums;
 using SortsVisualizer.lib.Models;
 
 namespace SortsVisualizer.lib.Services.Interfaces;

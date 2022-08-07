@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using SortsVisualizer.lib.Enums;
 using SortsVisualizer.lib.Models;
 using SortsVisualizer.lib.Models.Interfaces;
+using SortsVisualizer.lib.Models.Sorts;
 using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Services;
@@ -17,6 +17,7 @@ public class SorterService : ISorterService
         {
             { SortType.Bubble, new BubbleSorting(diagramService, updateStatistics)},
             { SortType.OptimizedBubble, new BubbleOptimizedSorting(diagramService, updateStatistics) },
+            { SortType.Insertion, new Insertion(diagramService, updateStatistics) },
         };
     }
 
