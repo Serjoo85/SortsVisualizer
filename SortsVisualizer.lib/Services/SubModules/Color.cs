@@ -6,24 +6,15 @@ using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Services.SubModules;
 
-public class ColorChanger : IColorChanger
+public class Color : IColor
 {
     private readonly ObservableCollection<DiagramItem> _items = null!;
     private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
 
-    public ColorChanger(ObservableCollection<DiagramItem> items, Action<NotifyCollectionChangedAction> onCollectionChanged)
+    public Color(ObservableCollection<DiagramItem> items, Action<NotifyCollectionChangedAction> onCollectionChanged)
     {
         _items = items;
         _onCollectionChanged = onCollectionChanged;
-    }
-
-    public void FillSingleRectangle(
-        int index,
-        System.Windows.Media.Color color)
-    {
-        var newItem = _items[index];
-        newItem.Color = new SolidColorBrush(color);
-        _items[index] = newItem;
     }
 
     public void Change(

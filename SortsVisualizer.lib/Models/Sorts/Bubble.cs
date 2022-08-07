@@ -6,9 +6,9 @@ using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Models.Sorts;
 
-public class BubbleSorting : BaseSorting, ISorterStrategy
+public class Bubble : BaseSorting, ISorterStrategy
 {
-    public BubbleSorting(IDiagramSourceService diagramService, Action<Statistics> updateStatistics) : base(diagramService, updateStatistics)
+    public Bubble(IDiagramSourceService diagramService, Action<Statistics> updateStatistics) : base(diagramService, updateStatistics)
     {
     }
 
@@ -32,8 +32,8 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                     hasSwap = true;
 
                     if (j > 0)
-                        DiagramService.ColorChanger.Change(j - 1, Colors.White);
-                    DiagramService.ColorChanger.Change(j, Colors.Orange);
+                        DiagramService.Color.Change(j - 1, Colors.White);
+                    DiagramService.Color.Change(j, Colors.Orange);
                     DiagramService.CollectionNotify();
 
                     _info.Steps++;
@@ -50,8 +50,8 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
                 else
                 {
                     if (j > 0)
-                        DiagramService.ColorChanger.Change(j - 1, Colors.White);
-                    DiagramService.ColorChanger.Change(j, Colors.Orange);
+                        DiagramService.Color.Change(j - 1, Colors.White);
+                    DiagramService.Color.Change(j, Colors.Orange);
                     DiagramService.CollectionNotify();
 
                     _info.Steps++;
@@ -61,12 +61,12 @@ public class BubbleSorting : BaseSorting, ISorterStrategy
             }
 
             // Отмечаем зелёным последний элемент как отсортированный.
-            DiagramService.ColorChanger.Change(num - i - 1, Colors.Green);
+            DiagramService.Color.Change(num - i - 1, Colors.Green);
             /*  Красим в белый предпоследний прямоугольник иначе
                 на последней итерации будет оранжевая полоса.
                 TODO Нужно оптимизировать.
             */
-            DiagramService.ColorChanger.Change(num - i - 2, Colors.White);
+            DiagramService.Color.Change(num - i - 2, Colors.White);
             DiagramService.CollectionNotify(); ;
 
             _info.Iterations++;

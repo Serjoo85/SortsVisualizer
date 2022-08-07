@@ -26,9 +26,9 @@ public abstract class BaseSorting
         Cts = new CancellationTokenSource();
         try
         {
-            await DiagramService.ColorChanger.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
+            await DiagramService.Color.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
             await SortAsync(collection, Cts.Token,delay);
-            await DiagramService.ColorChanger.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.Green);
+            await DiagramService.Color.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.Green);
         }
         catch (OperationCanceledException e)
         {
@@ -38,7 +38,7 @@ public abstract class BaseSorting
         {
             Cts.Dispose();
             Cts = new CancellationTokenSource();
-            await DiagramService.ColorChanger.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
+            await DiagramService.Color.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
         }
     }
 

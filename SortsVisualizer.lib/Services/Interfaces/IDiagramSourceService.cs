@@ -9,7 +9,7 @@ public interface IDiagramSourceService
     public ObservableCollection<DiagramItem> Items { get; }
     public void Shuffle();
 
-    public ColorChanger ColorChanger { get; }
+    public Color Color { get; }
 
     public void CollectionNotify();
 }

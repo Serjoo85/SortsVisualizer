@@ -7,9 +7,9 @@ using SortsVisualizer.lib.Services.Interfaces;
 
 namespace SortsVisualizer.lib.Models.Sorts;
 
-public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
+public class Shaker : BaseSorting, ISorterStrategy
 {
-    public BubbleOptimizedSorting(IDiagramSourceService colorChanger, Action<Statistics> statisticUpdater) : base(colorChanger, statisticUpdater)
+    public Shaker(IDiagramSourceService colorChanger, Action<Statistics> statisticUpdater) : base(colorChanger, statisticUpdater)
     {
     }
 
@@ -28,9 +28,9 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
             {
                 // Красим предыдущий элемент в белый.
                 if (i > 0 && collection[i - 1].Color.Color != Colors.Green)
-                    DiagramService.ColorChanger.Change(i - 1, Colors.White);
+                    DiagramService.Color.Change(i - 1, Colors.White);
                 // Красим текущий в оранжевый.
-                DiagramService.ColorChanger.Change(i, Colors.Orange);
+                DiagramService.Color.Change(i, Colors.Orange);
                 _info.Steps++;
                 OnStatisticsChanged(_info);
                 DiagramService.CollectionNotify();
@@ -49,7 +49,7 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
             }
 
             // Красим зелёным последний отсортированный элемент.
-            DiagramService.ColorChanger.Change(elementsCount - _info.Iterations - 1, Colors.Green);
+            DiagramService.Color.Change(elementsCount - _info.Iterations - 1, Colors.Green);
             DiagramService.CollectionNotify();
 
             if (!hasSwap1) return;
@@ -60,13 +60,13 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
                 if (i < elementsCount - 1)
                 {
                     if (collection[i + 1].Color.Color != Colors.Green)
-                        DiagramService.ColorChanger.Change(i + 1, Colors.White);
+                        DiagramService.Color.Change(i + 1, Colors.White);
                 }
 
                 // Красим текущий элемент в оранжевый если он не крайний отсортированный.
                 if (i != elementsCount - _info.Iterations - 1)
                 {
-                    DiagramService.ColorChanger.Change(i, Colors.Orange);
+                    DiagramService.Color.Change(i, Colors.Orange);
                     _info.Steps++;
                     OnStatisticsChanged(_info);
                 }
@@ -86,7 +86,7 @@ public class BubbleOptimizedSorting : BaseSorting, ISorterStrategy
             }
 
             // Красим зелёным последний отсортированный элемент.
-            DiagramService.ColorChanger.Change(_info.Iterations, Colors.Green);
+            DiagramService.Color.Change(_info.Iterations, Colors.Green);
             DiagramService.CollectionNotify();
 
             if (!hasSwap2) return;

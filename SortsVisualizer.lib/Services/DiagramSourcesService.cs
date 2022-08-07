@@ -11,7 +11,7 @@ public class DiagramSourcesService : IDiagramSourceService
 
     private static readonly Random Rnd = new Random();
     private readonly Action<NotifyCollectionChangedAction> _onCollectionChanged;
-    public ColorChanger ColorChanger { get; }
+    public Color Color { get; }
     public ObservableCollection<DiagramItem> Items { get; }
 
     public DiagramSourcesService(Action<NotifyCollectionChangedAction> onCollectionChanged, int elementsCount = 20, int heightFactor = 25, int width = 50)
@@ -19,7 +19,7 @@ public class DiagramSourcesService : IDiagramSourceService
         _onCollectionChanged = onCollectionChanged;
         Items = CollectionCreator.GetCollection(elementsCount, heightFactor, width);
         MixCollection(Items);
-        ColorChanger = new ColorChanger(Items, _onCollectionChanged);
+        Color = new Color(Items, _onCollectionChanged);
     }
 
     public void Shuffle()
