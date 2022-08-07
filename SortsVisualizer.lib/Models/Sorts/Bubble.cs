@@ -77,5 +77,6 @@ public class Bubble : BaseSorting, ISorterStrategy
     public void Stop()
     {
         Cts.Cancel();
+        Info.Reset();
     }
 }

@@ -33,9 +33,9 @@ namespace SortsVisualizer.lib.Models.Sorts
                 {
                     DiagramService.Color.Change(j, Colors.Orange);
                     DiagramService.CollectionNotify();
-                    await Task.Delay(500, cancel);
+                    await Task.Delay(100, cancel);
                     (collection[j], collection[j - 1]) = (collection[j - 1], collection[j]);
-                    await Task.Delay(500, cancel);
+                    await Task.Delay(100, cancel);
                     DiagramService.CollectionNotify();
                     Info.Steps++;
                     j -= 1;
@@ -47,6 +47,7 @@ namespace SortsVisualizer.lib.Models.Sorts
         public void Stop()
         {
             Cts.Cancel();
+            Info.Reset();
         }
     }
 }
