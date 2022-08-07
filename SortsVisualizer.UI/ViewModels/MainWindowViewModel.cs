@@ -92,29 +92,29 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     private ProcessStates _state;
     private SortType _selectedSort;
-    private int _numberOfSteps;
-    private int _numberOfIterations;
+    private int _numberOfReplacementses;
+    private int _numberOfComparisons;
 
     #endregion
 
     #region Properties
 
-    public int NumberOfStep
+    public int NumberOfReplacements
     {
-        get => _numberOfSteps;
+        get => _numberOfReplacementses;
         set
         {
-            _numberOfSteps = value;
+            _numberOfReplacementses = value;
             OnPropertyChanged();
         }
     }
 
-    public int NumberOfIterations
+    public int NumberOfComparisons
     {
-        get => _numberOfIterations;
+        get => _numberOfComparisons;
         set
         {
-            _numberOfIterations = value;
+            _numberOfComparisons = value;
             OnPropertyChanged();
         }
     }
@@ -140,8 +140,8 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     private void UpdateStatistics(Statistics info)
     {
-        NumberOfStep = info.Steps;
-        NumberOfIterations = info.Iterations;
+        NumberOfReplacements = info.Replacement;
+        NumberOfComparisons = info.Comparison;
     }
 
     #endregion

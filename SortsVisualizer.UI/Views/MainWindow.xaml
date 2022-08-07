@@ -40,10 +40,10 @@
             <StackPanel Orientation="Vertical">
                 <Label
                     FontSize="20"
-                    Content="{Binding NumberOfStep}" ContentStringFormat="Steps = {0}"/>
+                    Content="{Binding NumberOfReplacements}" ContentStringFormat="Replacement = {0}"/>
                 <Label
                     FontSize="20"
-                    Content="{Binding NumberOfIterations}" ContentStringFormat="Iterations = {0}"/>
+                    Content="{Binding NumberOfComparisons}" ContentStringFormat="Comparison = {0}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">

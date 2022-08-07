@@ -3,38 +3,38 @@
 public class Statistics
 {
     private readonly Action<Statistics> _statisticUpdater;
-    private int _steps;
-    private int _iterations;
+    private int _replacement;
+    private int _comparison;
 
     public Statistics(Action<Statistics> statisticUpdater)
     {
         _statisticUpdater = statisticUpdater;
     }
 
-    public int Steps
+    public int Replacement
     {
-        get => _steps;
+        get => _replacement;
         set
         {
-            _steps = value;
+            _replacement = value;
             Update();
         }
     }
 
-    public int Iterations
+    public int Comparison
     {
-        get => _iterations;
+        get => _comparison;
         set
         {
-            _iterations = value;
+            _comparison = value;
             Update();
         }
     }
 
     public void Reset()
     {
-        Iterations = 0;
-        Steps = 0;
+        Comparison = 0;
+        Replacement = 0;
     }
 
     private void Update()

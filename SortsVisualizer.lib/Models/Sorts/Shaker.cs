@@ -23,14 +23,15 @@ public class Shaker : BaseSorting, ISorterStrategy
         do
         {
             hasSwap1 = false;
-            for (int i = Info.Iterations; i < elementsCount - Info.Iterations - 1; i++)
+
+            for (int i = Info.Comparison; i < elementsCount - Info.Comparison - 1; i++)
             {
                 // Красим предыдущий элемент в белый.
                 if (i > 0 && collection[i - 1].Color.Color != Colors.Green)
                     DiagramService.Color.Change(i - 1, Colors.White);
                 // Красим текущий в оранжевый.
                 DiagramService.Color.Change(i, Colors.Orange);
-                Info.Steps++;
+                Info.Replacement++;
                 DiagramService.CollectionNotify();
 
 
@@ -46,14 +47,16 @@ public class Shaker : BaseSorting, ISorterStrategy
                 }
             }
 
+            Info.Comparison++;
+
             // Красим зелёным последний отсортированный элемент.
-            DiagramService.Color.Change(elementsCount - Info.Iterations - 1, Colors.Green);
+            DiagramService.Color.Change(elementsCount - Info.Comparison - 1, Colors.Green);
             DiagramService.CollectionNotify();
 
             if (!hasSwap1) return;
 
             hasSwap2 = false;
-            for (int i = elementsCount - Info.Iterations - 1; i > Info.Iterations; i--)
+            for (int i = elementsCount - Info.Comparison - 1; i > Info.Comparison; i--)
             {
                 if (i < elementsCount - 1)
                 {
@@ -62,10 +65,10 @@ public class Shaker : BaseSorting, ISorterStrategy
                 }
 
                 // Красим текущий элемент в оранжевый если он не крайний отсортированный.
-                if (i != elementsCount - Info.Iterations - 1)
+                if (i != elementsCount - Info.Comparison - 1)
                 {
                     DiagramService.Color.Change(i, Colors.Orange);
-                    Info.Steps++;
+                    Info.Replacement++;
                 }
 
                 DiagramService.CollectionNotify();
@@ -82,14 +85,15 @@ public class Shaker : BaseSorting, ISorterStrategy
                 }
             }
 
+            Info.Comparison++;
             // Красим зелёным последний отсортированный элемент.
-            DiagramService.Color.Change(Info.Iterations, Colors.Green);
+            DiagramService.Color.Change(Info.Comparison, Colors.Green);
             DiagramService.CollectionNotify();
 
             if (!hasSwap2) return;
 
-            Info.Iterations++;
-        } while (Info.Iterations < elementsCount);
+            Info.Comparison++;
+        } while (Info.Comparison < elementsCount);
     }
 
     public void Stop()

@@ -33,11 +33,12 @@ namespace SortsVisualizer.lib.Models.Sorts
                 {
                     DiagramService.Color.Change(j, Colors.Orange);
                     DiagramService.CollectionNotify();
-                    await Task.Delay(100, cancel);
+                    await Task.Delay(delay, cancel);
                     (collection[j], collection[j - 1]) = (collection[j - 1], collection[j]);
-                    await Task.Delay(100, cancel);
+                    await Task.Delay(delay, cancel);
                     DiagramService.CollectionNotify();
-                    Info.Steps++;
+                    Info.Replacement++;
+                    Info.Comparison++;
                     j -= 1;
                 }
                 DiagramService.Color.Change(j, Colors.Green);

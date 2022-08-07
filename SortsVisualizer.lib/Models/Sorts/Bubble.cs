@@ -20,10 +20,11 @@ public class Bubble : BaseSorting, ISorterStrategy
         for (int i = 0; i < num - 1; i++)
         {
             var hasSwap = false;
+            
             for (int j = 0; j < num - i - 1; j++)
             {
                 // j - индекс текущего элемента.
-
+                Info.Comparison++;
                 // Закрашиваем текущий элемент с перестановкой.
                 if (collection[j].Value > collection[j + 1].Value)
                 {
@@ -33,13 +34,11 @@ public class Bubble : BaseSorting, ISorterStrategy
                         DiagramService.Color.Change(j - 1, Colors.White);
                     DiagramService.Color.Change(j, Colors.Orange);
                     DiagramService.CollectionNotify();
-
-                    Info.Steps++;
-
                     await Task.Delay(delay, cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
+                    Info.Replacement++;
                     DiagramService.CollectionNotify();
-                    // При перестановки получается перемещение, должна быть задержка.
+                    // При перестановке получается перемещение, должна быть задержка.
                     await Task.Delay(delay, cancel);
 
                 }
@@ -50,8 +49,6 @@ public class Bubble : BaseSorting, ISorterStrategy
                         DiagramService.Color.Change(j - 1, Colors.White);
                     DiagramService.Color.Change(j, Colors.Orange);
                     DiagramService.CollectionNotify();
-
-                    Info.Steps++;
                     await Task.Delay(delay, cancel);
                 }
             }
@@ -65,7 +62,7 @@ public class Bubble : BaseSorting, ISorterStrategy
             DiagramService.Color.Change(num - i - 2, Colors.White);
             DiagramService.CollectionNotify(); ;
 
-            Info.Iterations++;
+            Info.Comparison++;
             // Проход без замены признак отсортированной последовательности.
             if (hasSwap == false)
             {
