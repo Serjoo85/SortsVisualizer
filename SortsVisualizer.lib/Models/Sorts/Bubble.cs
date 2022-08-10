@@ -38,9 +38,6 @@ public class Bubble : BaseSorting, ISorterStrategy
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
                     Info.Replacement++;
                     DiagramService.CollectionNotify();
-                    // При перестановке получается перемещение, должна быть задержка.
-                    await Task.Delay(delay, cancel);
-
                 }
                 // Закрашиваем текущий элемент без перестановки.
                 else
@@ -60,7 +57,7 @@ public class Bubble : BaseSorting, ISorterStrategy
                 TODO Нужно оптимизировать.
             */
             DiagramService.Color.Change(num - i - 2, Colors.White);
-            DiagramService.CollectionNotify(); ;
+            DiagramService.CollectionNotify();
 
             Info.Comparison++;
             // Проход без замены признак отсортированной последовательности.
