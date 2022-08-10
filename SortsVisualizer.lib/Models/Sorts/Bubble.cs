@@ -33,11 +33,9 @@ public class Bubble : BaseSorting, ISorterStrategy
                     if (j > 0)
                         DiagramService.Color.Change(j - 1, Colors.White);
                     DiagramService.Color.Change(j, Colors.Orange);
-                    DiagramService.CollectionNotify();
                     await Task.Delay(delay, cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
                     Info.Replacement++;
-                    DiagramService.CollectionNotify();
                 }
                 // Закрашиваем текущий элемент без перестановки.
                 else
@@ -45,7 +43,6 @@ public class Bubble : BaseSorting, ISorterStrategy
                     if (j > 0)
                         DiagramService.Color.Change(j - 1, Colors.White);
                     DiagramService.Color.Change(j, Colors.Orange);
-                    DiagramService.CollectionNotify();
                     await Task.Delay(delay, cancel);
                 }
             }
@@ -57,7 +54,6 @@ public class Bubble : BaseSorting, ISorterStrategy
                 TODO Нужно оптимизировать.
             */
             DiagramService.Color.Change(num - i - 2, Colors.White);
-            DiagramService.CollectionNotify();
 
             Info.Comparison++;
             // Проход без замены признак отсортированной последовательности.

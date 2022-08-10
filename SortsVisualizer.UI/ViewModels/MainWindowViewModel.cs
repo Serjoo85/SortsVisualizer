@@ -42,15 +42,15 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     public ICommand StartSortingCommand { get; }
 
-    private bool CanStartSortingCommandExecute(object o) => _state is ProcessStates.NothingToDo;
+    private bool CanStartSortingCommandExecute(object o) => _state is AppStates.NothingToDo;
 
     public void RaiseCanExecuteChanged() => CommandManager.InvalidateRequerySuggested();
 
     private async void OnStartSortingCommandExecuted(object o)
     {
-        _state = ProcessStates.Sorting;
+        _state = AppStates.Sorting;
         await SorterService.StartAsync(SelectedSort, DiagramSource, 80);
-        _state = ProcessStates.NothingToDo;
+        _state = AppStates.NothingToDo;
         RaiseCanExecuteChanged();
     }
 
@@ -61,13 +61,13 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     public ICommand ShuffleCommand { get; }
 
-    private bool CanShuffleCommandExecute(object o) => _state is ProcessStates.NothingToDo;
+    private bool CanShuffleCommandExecute(object o) => _state is AppStates.NothingToDo;
 
     private void OnShuffleCommandExecuted(object o)
     {
-        _state = ProcessStates.Shuffling;
+        _state = AppStates.Shuffling;
         DiagramSourceService.Shuffle();
-        _state = ProcessStates.NothingToDo;
+        _state = AppStates.NothingToDo;
     }
 
     #endregion
@@ -76,12 +76,12 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     public ICommand StopSortingCommand { get; }
 
-    private bool CanStopSortingCommandExecute(object o) => _state is ProcessStates.Sorting;
+    private bool CanStopSortingCommandExecute(object o) => _state is AppStates.Sorting;
 
     private void OnStopSortingCommandExecuted(object o)
     {
         SorterService.Stop();
-        _state = ProcessStates.NothingToDo;
+        _state = AppStates.NothingToDo;
     }
 
     #endregion
@@ -90,7 +90,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     #region Fields
 
-    private ProcessStates _state;
+    private AppStates _state;
     private SortType _selectedSort;
     private int _numberOfReplacementses;
     private int _numberOfComparisons;
@@ -148,10 +148,11 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     public MainWindowViewModel()
     {
-        _state = ProcessStates.NothingToDo;
+        _state = AppStates.NothingToDo;
 
         DiagramSourceService = new DiagramSourcesService(OnCollectionChanged);
         DiagramSource = DiagramSourceService.Items;
+        DiagramSource.CollectionChanged += MyItemsSource_CollectionChanged;
         SorterService = new SorterService(DiagramSourceService, UpdateStatistics);
 
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
@@ -159,5 +160,9 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
         ShuffleCommand = new LambdaCommand(OnShuffleCommandExecuted, CanShuffleCommandExecute);
     }
 
+    void MyItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnCollectionChanged(e.Action);
+    }
 
 }

@@ -32,7 +32,6 @@ public class Shaker : BaseSorting, ISorterStrategy
                 // Красим текущий в оранжевый.
                 DiagramService.Color.Change(i, Colors.Orange);
                 Info.Replacement++;
-                DiagramService.CollectionNotify();
 
 
                 await Task.Delay(delay, cancel);
@@ -41,7 +40,6 @@ public class Shaker : BaseSorting, ISorterStrategy
                 if (collection[i].Value > collection[i + 1].Value)
                 {
                     (collection[i], collection[i + 1]) = (collection[i + 1], collection[i]);
-                    DiagramService.CollectionNotify();
                     await Task.Delay(delay, cancel);
                     hasSwap1 = true;
                 }
@@ -51,7 +49,6 @@ public class Shaker : BaseSorting, ISorterStrategy
 
             // Красим зелёным последний отсортированный элемент.
             DiagramService.Color.Change(elementsCount - Info.Comparison - 1, Colors.Green);
-            DiagramService.CollectionNotify();
 
             if (!hasSwap1) return;
 
@@ -71,15 +68,12 @@ public class Shaker : BaseSorting, ISorterStrategy
                     Info.Replacement++;
                 }
 
-                DiagramService.CollectionNotify();
-
                 await Task.Delay(delay, cancel);
 
                 // Меняем местами если меньше.
                 if (collection[i].Value < collection[i - 1].Value)
                 {
                     (collection[i], collection[i - 1]) = (collection[i - 1], collection[i]);
-                    DiagramService.CollectionNotify();
                     await Task.Delay(delay, cancel);
                     hasSwap2 = true;
                 }
@@ -88,7 +82,6 @@ public class Shaker : BaseSorting, ISorterStrategy
             Info.Comparison++;
             // Красим зелёным последний отсортированный элемент.
             DiagramService.Color.Change(Info.Comparison, Colors.Green);
-            DiagramService.CollectionNotify();
 
             if (!hasSwap2) return;
 

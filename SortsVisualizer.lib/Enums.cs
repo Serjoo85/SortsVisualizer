@@ -7,7 +7,7 @@ public enum SortType
     Insertion,
 }
 
-public enum ProcessStates
+public enum AppStates
 {
     NothingToDo,
     Sorting,

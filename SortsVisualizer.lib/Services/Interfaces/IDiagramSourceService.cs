@@ -10,6 +10,4 @@ public interface IDiagramSourceService
     public void Shuffle();
 
     public Color Color { get; }
-
-    public void CollectionNotify();
 }

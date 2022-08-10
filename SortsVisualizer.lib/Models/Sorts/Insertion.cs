@@ -32,11 +32,9 @@ namespace SortsVisualizer.lib.Models.Sorts
                 while (j > 0 && collection[j - 1].Value > x)
                 {
                     DiagramService.Color.Change(j, Colors.Orange);
-                    DiagramService.CollectionNotify();
                     await Task.Delay(delay, cancel);
                     (collection[j], collection[j - 1]) = (collection[j - 1], collection[j]);
                     await Task.Delay(delay, cancel);
-                    DiagramService.CollectionNotify();
                     Info.Replacement++;
                     Info.Comparison++;
                     j -= 1;

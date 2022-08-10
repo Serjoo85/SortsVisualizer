@@ -43,10 +43,4 @@ public class DiagramSourcesService : IDiagramSourceService
                 (items[j], items[j - r]) = (items[j - r], items[j]);
             }
     }
-
-
-    public void CollectionNotify()
-    {
-        _onCollectionChanged.Invoke(NotifyCollectionChangedAction.Replace);
-    }
 }
