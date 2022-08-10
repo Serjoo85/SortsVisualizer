@@ -51,6 +51,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     {
         _state = AppStates.Sorting;
         await SorterService.StartAsync(SelectedSort, DiagramSource, GetInvertedSpeedValue);
+        DiagramSourceService.Shuffle();
         _state = AppStates.NothingToDo;
         RaiseCanExecuteChanged();
     }

@@ -7,12 +7,17 @@ public abstract class BaseSorting
 {
     protected CancellationTokenSource Cts = null!;
     protected IDiagramSourceService DiagramService;
-    protected readonly Statistics Info;
+    protected readonly Statistics Statistics;
+
+    public void ResetStatistics()
+    {
+        Statistics.Reset();
+    }
 
     protected BaseSorting(IDiagramSourceService diagramService, Action<Statistics> statisticUpdater)
     {
         DiagramService = diagramService;
-        Info = new Statistics(statisticUpdater);
+        Statistics = new Statistics(statisticUpdater);
     }
 
     public async Task StartAsync(ObservableCollection<DiagramItem> collection, Func<int> getSortSpeed)

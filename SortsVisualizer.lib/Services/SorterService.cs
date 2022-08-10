@@ -35,6 +35,7 @@ public class SorterService : ISorterService
         if (!_sorters.ContainsKey(type))
             throw new ArgumentException(nameof(type));
         _startedStrategy = _sorters[type];
+        _startedStrategy.ResetStatistics();
         await _startedStrategy.StartAsync(collection, getSortSpeed);
     }
 

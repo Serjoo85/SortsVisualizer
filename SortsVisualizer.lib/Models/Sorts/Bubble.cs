@@ -16,6 +16,7 @@ public class Bubble : BaseSorting, ISorterStrategy
         ObservableCollection<DiagramItem> collection,
         CancellationToken cancel, Func<int> getSortSpeed)
     {
+        
         int num = collection.Count;
         for (int i = 0; i < num - 1; i++)
         {
@@ -24,7 +25,7 @@ public class Bubble : BaseSorting, ISorterStrategy
             for (int j = 0; j < num - i - 1; j++)
             {
                 // j - индекс текущего элемента.
-                Info.Comparison++;
+                Statistics.Comparison++;
                 // Закрашиваем текущий элемент с перестановкой.
                 if (collection[j].Value > collection[j + 1].Value)
                 {
@@ -35,7 +36,7 @@ public class Bubble : BaseSorting, ISorterStrategy
                     DiagramService.Color.Change(j, Colors.Orange);
                     await Task.Delay(getSortSpeed.Invoke(), cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
-                    Info.Replacement++;
+                    Statistics.Replacement++;
                 }
                 // Закрашиваем текущий элемент без перестановки.
                 else
@@ -55,7 +56,7 @@ public class Bubble : BaseSorting, ISorterStrategy
             */
             DiagramService.Color.Change(num - i - 2, Colors.White);
 
-            Info.Comparison++;
+            Statistics.Comparison++;
             // Проход без замены признак отсортированной последовательности.
             if (hasSwap == false)
             {
@@ -67,6 +68,6 @@ public class Bubble : BaseSorting, ISorterStrategy
     public void Stop()
     {
         Cts.Cancel();
-        Info.Reset();
+        Statistics.Reset();
     }
 }

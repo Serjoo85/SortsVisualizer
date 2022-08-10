@@ -6,5 +6,6 @@ namespace SortsVisualizer.lib.Models.Interfaces;
 public interface ISorterStrategy
 {
     Task StartAsync(ObservableCollection<DiagramItem> collection, Func<int> func);
+    public void ResetStatistics();
     void Stop();
 }

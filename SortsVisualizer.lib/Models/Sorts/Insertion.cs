@@ -35,8 +35,8 @@ namespace SortsVisualizer.lib.Models.Sorts
                     await Task.Delay(getSortSpeed.Invoke(), cancel);
                     (collection[j], collection[j - 1]) = (collection[j - 1], collection[j]);
                     await Task.Delay(getSortSpeed.Invoke(), cancel);
-                    Info.Replacement++;
-                    Info.Comparison++;
+                    Statistics.Replacement++;
+                    Statistics.Comparison++;
                     j -= 1;
                 }
                 DiagramService.Color.Change(j, Colors.Green);
@@ -46,7 +46,7 @@ namespace SortsVisualizer.lib.Models.Sorts
         public void Stop()
         {
             Cts.Cancel();
-            Info.Reset();
+            Statistics.Reset();
         }
     }
 }
