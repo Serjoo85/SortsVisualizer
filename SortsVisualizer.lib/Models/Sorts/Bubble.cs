@@ -14,7 +14,7 @@ public class Bubble : BaseSorting, ISorterStrategy
 
     protected override async Task SortAsync(
         ObservableCollection<DiagramItem> collection,
-        CancellationToken cancel, int delay)
+        CancellationToken cancel, Func<int> getSortSpeed)
     {
         int num = collection.Count;
         for (int i = 0; i < num - 1; i++)
@@ -33,7 +33,7 @@ public class Bubble : BaseSorting, ISorterStrategy
                     if (j > 0)
                         DiagramService.Color.Change(j - 1, Colors.White);
                     DiagramService.Color.Change(j, Colors.Orange);
-                    await Task.Delay(delay, cancel);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
                     (collection[j], collection[j + 1]) = (collection[j + 1], collection[j]);
                     Info.Replacement++;
                 }
@@ -43,7 +43,7 @@ public class Bubble : BaseSorting, ISorterStrategy
                     if (j > 0)
                         DiagramService.Color.Change(j - 1, Colors.White);
                     DiagramService.Color.Change(j, Colors.Orange);
-                    await Task.Delay(delay, cancel);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
                 }
             }
 

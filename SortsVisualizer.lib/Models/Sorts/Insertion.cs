@@ -20,7 +20,7 @@ namespace SortsVisualizer.lib.Models.Sorts
         protected override async Task SortAsync(
         ObservableCollection<DiagramItem> collection,
         CancellationToken cancel,
-        int delay)
+        Func<int> getSortSpeed)
         {
             int j;
             int x;
@@ -32,9 +32,9 @@ namespace SortsVisualizer.lib.Models.Sorts
                 while (j > 0 && collection[j - 1].Value > x)
                 {
                     DiagramService.Color.Change(j, Colors.Orange);
-                    await Task.Delay(delay, cancel);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
                     (collection[j], collection[j - 1]) = (collection[j - 1], collection[j]);
-                    await Task.Delay(delay, cancel);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
                     Info.Replacement++;
                     Info.Comparison++;
                     j -= 1;

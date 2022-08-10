@@ -15,7 +15,7 @@ public class Shaker : BaseSorting, ISorterStrategy
 
     protected override async Task SortAsync(
         ObservableCollection<DiagramItem> collection,
-        CancellationToken cancel, int delay)
+        CancellationToken cancel, Func<int> getSortSpeed)
     {
         bool hasSwap1 = false;
         bool hasSwap2 = false;
@@ -34,13 +34,13 @@ public class Shaker : BaseSorting, ISorterStrategy
                 Info.Replacement++;
 
 
-                await Task.Delay(delay, cancel);
+                await Task.Delay(getSortSpeed.Invoke(), cancel);
 
                 // Меняем местами если больше.
                 if (collection[i].Value > collection[i + 1].Value)
                 {
                     (collection[i], collection[i + 1]) = (collection[i + 1], collection[i]);
-                    await Task.Delay(delay, cancel);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
                     hasSwap1 = true;
                 }
             }
@@ -68,13 +68,13 @@ public class Shaker : BaseSorting, ISorterStrategy
                     Info.Replacement++;
                 }
 
-                await Task.Delay(delay, cancel);
+                await Task.Delay(getSortSpeed.Invoke(), cancel);
 
                 // Меняем местами если меньше.
                 if (collection[i].Value < collection[i - 1].Value)
                 {
                     (collection[i], collection[i - 1]) = (collection[i - 1], collection[i]);
-                    await Task.Delay(delay, cancel);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
                     hasSwap2 = true;
                 }
             }

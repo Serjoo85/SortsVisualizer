@@ -12,12 +12,12 @@ public class QuickSort : BaseSorting, ISorterStrategy
     {
     }
 
-    protected override async Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, int delay)
+    protected override async Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Func<int> getSortSpeed)
     {
-        await SortArray(collection, 0, 19, cancel, delay);
+        await SortArray(collection, 0, 19, cancel, getSortSpeed);
     }
 
-    public async Task SortArray(ObservableCollection<DiagramItem> collection, int leftIndex, int rightIndex, CancellationToken cancel, int delay)
+    public async Task SortArray(ObservableCollection<DiagramItem> collection, int leftIndex, int rightIndex, CancellationToken cancel, Func<int> getSortSpeed)
     {
         var i = leftIndex;
         var j = rightIndex;
@@ -35,7 +35,7 @@ public class QuickSort : BaseSorting, ISorterStrategy
             }
             if (i <= j)
             {
-                await Task.Delay(delay, cancel);
+                await Task.Delay(getSortSpeed.Invoke(), cancel);
                 (collection[i], collection[j]) = (collection[j], collection[i]);
                 i++;
                 j--;
@@ -43,9 +43,9 @@ public class QuickSort : BaseSorting, ISorterStrategy
         }
 
         if (leftIndex < j)
-            await SortArray(collection, leftIndex, j, cancel, delay);
+            await SortArray(collection, leftIndex, j, cancel, getSortSpeed);
         if (i < rightIndex)
-            await SortArray(collection, i, rightIndex, cancel, delay);
+            await SortArray(collection, i, rightIndex, cancel, getSortSpeed);
     }
 
     public void Stop()

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -49,13 +50,12 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     private async void OnStartSortingCommandExecuted(object o)
     {
         _state = AppStates.Sorting;
-        await SorterService.StartAsync(SelectedSort, DiagramSource, 80);
+        await SorterService.StartAsync(SelectedSort, DiagramSource, () => SortSpeed);
         _state = AppStates.NothingToDo;
         RaiseCanExecuteChanged();
     }
 
     #endregion
-
 
     #region Shuffle
 
@@ -88,23 +88,47 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     #endregion
 
+    #region Constants
+
+    public const int MaxSpeed = 1500;
+    public const int MinSpeed = 50;
+
+    #endregion
+
     #region Fields
 
     private AppStates _state;
     private SortType _selectedSort;
-    private int _numberOfReplacementses;
+    private int _numberOfReplacements;
     private int _numberOfComparisons;
+    private int _sortSpeed;
+
+
 
     #endregion
 
     #region Properties
 
-    public int NumberOfReplacements
+    public int SortSpeed
     {
-        get => _numberOfReplacementses;
+        // Инвертируем значение слайдера.
+        get => Math.Abs(_sortSpeed - MaxSortSpeed);
         set
         {
-            _numberOfReplacementses = value;
+            _sortSpeed = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int MaxSortSpeed => MaxSpeed;
+    public int MinSortSpeed => MinSpeed;
+
+    public int NumberOfReplacements
+    {
+        get => _numberOfReplacements;
+        set
+        {
+            _numberOfReplacements = value;
             OnPropertyChanged();
         }
     }
@@ -149,10 +173,11 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     public MainWindowViewModel()
     {
         _state = AppStates.NothingToDo;
+        _sortSpeed = 100;
 
         DiagramSourceService = new DiagramSourcesService(OnCollectionChanged);
         DiagramSource = DiagramSourceService.Items;
-        DiagramSource.CollectionChanged += MyItemsSource_CollectionChanged;
+        DiagramSource.CollectionChanged += DiagramItemsSource_CollectionChanged!;
         SorterService = new SorterService(DiagramSourceService, UpdateStatistics);
 
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
@@ -160,7 +185,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
         ShuffleCommand = new LambdaCommand(OnShuffleCommandExecuted, CanShuffleCommandExecute);
     }
 
-    void MyItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    void DiagramItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         OnCollectionChanged(e.Action);
     }

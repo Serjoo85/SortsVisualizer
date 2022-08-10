@@ -30,12 +30,12 @@ public class SorterService : ISorterService
     /// <param name="collection"></param>
     /// <param name="delay"></param>
     /// <returns></returns>
-    public async Task StartAsync(SortType type, ObservableCollection<DiagramItem> collection, int delay = 80)
+    public async Task StartAsync(SortType type, ObservableCollection<DiagramItem> collection, Func<int> getSortSpeed)
     {
         if (!_sorters.ContainsKey(type))
             throw new ArgumentException(nameof(type));
         _startedStrategy = _sorters[type];
-        await _startedStrategy.StartAsync(collection, delay);
+        await _startedStrategy.StartAsync(collection, getSortSpeed);
     }
 
     public void Stop()

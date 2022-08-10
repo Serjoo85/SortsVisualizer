@@ -15,13 +15,13 @@ public abstract class BaseSorting
         Info = new Statistics(statisticUpdater);
     }
 
-    public async Task StartAsync(ObservableCollection<DiagramItem> collection,int delay)
+    public async Task StartAsync(ObservableCollection<DiagramItem> collection, Func<int> getSortSpeed)
     {
         Cts = new CancellationTokenSource();
         try
         {
             await DiagramService.Color.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.White);
-            await SortAsync(collection, Cts.Token,delay);
+            await SortAsync(collection, Cts.Token, getSortSpeed);
             await DiagramService.Color.MakeLadderAnimation(CancellationToken.None, System.Windows.Media.Colors.Green);
         }
         catch (OperationCanceledException e)
@@ -36,6 +36,6 @@ public abstract class BaseSorting
         }
     }
 
-    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, int delay);
+    protected abstract Task SortAsync(ObservableCollection<DiagramItem> collection, CancellationToken cancel, Func<int> getSortSpeed);
 
 }

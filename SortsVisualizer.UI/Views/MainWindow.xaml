@@ -51,9 +51,11 @@
                     x:Name="SpeedSlider"
                     Width="300"
                     Margin="5"
-                    Maximum="1500"
+                    Maximum="{Binding MaxSortSpeed, Mode=OneWay}"
+                    Minimum="{Binding MinSortSpeed, Mode=OneWay}"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+                    VerticalAlignment="Center"
+                    Value="{Binding SortSpeed, Mode=OneWayToSource}"/>
                 <ComboBox
                     x:Name="SortList"
                     SelectedIndex="0"
