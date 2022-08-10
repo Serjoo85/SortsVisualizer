@@ -47,6 +47,13 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
+                <Slider
+                    x:Name="SpeedSlider"
+                    Width="300"
+                    Margin="5"
+                    Maximum="1500"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
                 <ComboBox
                     x:Name="SortList"
                     SelectedIndex="0"
