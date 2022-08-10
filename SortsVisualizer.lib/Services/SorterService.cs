@@ -18,6 +18,7 @@ public class SorterService : ISorterService
             { SortType.Bubble, new Bubble(diagramService, updateStatistics)},
             { SortType.Shaker, new Shaker(diagramService, updateStatistics) },
             { SortType.Insertion, new Insertion(diagramService, updateStatistics) },
+            { SortType.QuickSort, new QuickSort(diagramService, updateStatistics) },
         };
     }
 

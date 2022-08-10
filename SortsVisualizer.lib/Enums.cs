@@ -5,6 +5,7 @@ public enum SortType
     Bubble,
     Shaker,
     Insertion,
+    QuickSort,
 }
 
 public enum AppStates
