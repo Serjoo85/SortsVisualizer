@@ -24,21 +24,39 @@ public class QuickSort : BaseSorting, ISorterStrategy
         var pivot = collection[leftIndex].Value;
         while (i <= j)
         {
+            
             while (collection[i].Value < pivot)
             {
+                Info.Comparison++;
                 i++;
             }
 
             while (collection[j].Value > pivot)
             {
+                Info.Comparison++;
                 j--;
             }
+
             if (i <= j)
             {
-                await Task.Delay(getSortSpeed.Invoke(), cancel);
-                (collection[i], collection[j]) = (collection[j], collection[i]);
-                i++;
-                j--;
+                if (i != j)
+                {
+                    DiagramService.Color.Change(i, Colors.Orange);
+                    DiagramService.Color.Change(j, Colors.Orange);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
+                    Info.Replacement++;
+                    (collection[i], collection[j]) = (collection[j], collection[i]);
+                    await Task.Delay(getSortSpeed.Invoke(), cancel);
+                    i++;
+                    j--;
+                    if (j < 19) DiagramService.Color.Change(j + 1, Colors.White);
+                    if (i > 0) DiagramService.Color.Change(i - 1, Colors.White); 
+                }
+                else
+                {
+                    i++;
+                    j--;
+                }
             }
         }
 
@@ -50,6 +68,7 @@ public class QuickSort : BaseSorting, ISorterStrategy
 
     public void Stop()
     {
+        Info.Reset();
         Cts.Cancel();
     }
 }

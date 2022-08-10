@@ -6,15 +6,14 @@
         xmlns:vm="clr-namespace:SortsVisualizer.UI.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Height="650" 
-        Width="1050">
+        SizeToContent="WidthAndHeight">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <StackPanel>
         <ItemsControl ItemsSource="{Binding DiagramSource}" 
                       HorizontalAlignment="Center"
-                      Margin="0,25,0,0">
+                      Margin="10,25,10,0">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"
@@ -44,6 +43,9 @@
                 <Label
                     FontSize="20"
                     Content="{Binding NumberOfComparisons}" ContentStringFormat="Comparison = {0}"/>
+                <Label
+                    FontSize="20"
+                    Content="{Binding ElementName=SpeedSlider, Path=Value}" ContentStringFormat="SortSpeed = {0}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -51,11 +53,15 @@
                     x:Name="SpeedSlider"
                     Width="300"
                     Margin="5"
-                    Maximum="{Binding MaxSortSpeed, Mode=OneWay}"
-                    Minimum="{Binding MinSortSpeed, Mode=OneWay}"
+                    Maximum="{Binding MaxSortSliderValue, Mode=OneWay}"
+                    Minimum="{Binding MinSortSliderValue, Mode=OneWay}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Value="{Binding SortSpeed, Mode=OneWayToSource}"/>
+                    SmallChange="10"
+                    LargeChange="50"
+                    IsSnapToTickEnabled="True"
+                    TickFrequency="10"
+                    Value="{Binding SortSpeed, Mode=TwoWay}"/>
                 <ComboBox
                     x:Name="SortList"
                     SelectedIndex="0"

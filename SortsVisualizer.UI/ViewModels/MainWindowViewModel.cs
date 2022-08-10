@@ -50,10 +50,20 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     private async void OnStartSortingCommandExecuted(object o)
     {
         _state = AppStates.Sorting;
-        await SorterService.StartAsync(SelectedSort, DiagramSource, () => SortSpeed);
+        await SorterService.StartAsync(SelectedSort, DiagramSource, GetInvertedSpeedValue);
         _state = AppStates.NothingToDo;
         RaiseCanExecuteChanged();
     }
+
+    /*
+     * Инвертируем значение слайдера
+     * слева - низкая скорость
+     * справа - высокая скорость
+     * Т.к. скорость это задержка в миллисекундах, то без инвертирования
+     * чем выше показания слайдера тем меньше скорость. Нелогично.
+     */
+    private int GetInvertedSpeedValue() => Math.Abs(SortSpeed - MaxSortSliderValue + SpeedLimit);
+
 
     #endregion
 
@@ -90,8 +100,12 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
 
     #region Constants
 
-    public const int MaxSpeed = 1500;
-    public const int MinSpeed = 50;
+    // П
+    public const int MaxSliderValue = 1500;
+    public const int MinSliderValue = 50;
+    public const int InitialSliderValue = 1300;
+    // Предел скорости
+    public const int SpeedLimit = 50;
 
     #endregion
 
@@ -112,7 +126,7 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     public int SortSpeed
     {
         // Инвертируем значение слайдера.
-        get => Math.Abs(_sortSpeed - MaxSortSpeed);
+        get => _sortSpeed;
         set
         {
             _sortSpeed = value;
@@ -120,8 +134,8 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
         }
     }
 
-    public int MaxSortSpeed => MaxSpeed;
-    public int MinSortSpeed => MinSpeed;
+    public int MaxSortSliderValue => MaxSliderValue;
+    public int MinSortSliderValue => MinSliderValue;
 
     public int NumberOfReplacements
     {
@@ -173,7 +187,6 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
     public MainWindowViewModel()
     {
         _state = AppStates.NothingToDo;
-        _sortSpeed = 100;
 
         DiagramSourceService = new DiagramSourcesService(OnCollectionChanged);
         DiagramSource = DiagramSourceService.Items;
@@ -183,6 +196,8 @@ public class MainWindowViewModel : INotifyCollectionChanged, INotifyPropertyChan
         StartSortingCommand = new LambdaCommand(OnStartSortingCommandExecuted, CanStartSortingCommandExecute);
         StopSortingCommand = new LambdaCommand(OnStopSortingCommandExecuted, CanStopSortingCommandExecute);
         ShuffleCommand = new LambdaCommand(OnShuffleCommandExecuted, CanShuffleCommandExecute);
+
+        SortSpeed = InitialSliderValue;
     }
 
     void DiagramItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
